@@ -1,5 +1,5 @@
 import { useDepartments } from "../../../api/useApis";
-import CheckBox from "../../../ui/CheckBox";
+import CheckBox from "../../../ui/inputs/CheckBox";
 
 function DepartmentFilterBody() {
   const { data: departments, isLoading } = useDepartments();

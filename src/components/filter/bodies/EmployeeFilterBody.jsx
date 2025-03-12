@@ -1,5 +1,5 @@
 import { useEmployees } from "../../../api/useApis";
-import CheckBox from "../../../ui/CheckBox";
+import CheckBox from "../../../ui/inputs/CheckBox";
 
 function EmployeeFilterBody() {
   const { data: employees, isLoading } = useEmployees();

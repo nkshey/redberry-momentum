@@ -1,4 +1,4 @@
-import CheckMarkIcon from "../ui/icons/CheckMarkIcon";
+import CheckMarkIcon from "../icons/CheckMarkIcon";
 
 function CheckBox({ id, children }) {
   return (

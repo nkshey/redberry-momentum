@@ -1,5 +1,5 @@
 import { usePriorities } from "../../../api/useApis";
-import CheckBox from "../../../ui/CheckBox";
+import CheckBox from "../../../ui/inputs/CheckBox";
 
 function PriorityFilterBody() {
   const { data: priorities, isLoading } = usePriorities();
