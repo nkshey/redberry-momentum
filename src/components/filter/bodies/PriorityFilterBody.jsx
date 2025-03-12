@@ -1,4 +1,4 @@
-import { usePriorities } from "../../../api/apis";
+import { usePriorities } from "../../../api/useApis";
 import CheckBox from "../../../ui/CheckBox";
 
 function PriorityFilterBody() {

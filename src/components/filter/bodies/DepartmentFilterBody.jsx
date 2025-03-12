@@ -1,4 +1,4 @@
-import { useDepartments } from "../../../api/apis";
+import { useDepartments } from "../../../api/useApis";
 import CheckBox from "../../../ui/CheckBox";
 
 function DepartmentFilterBody() {

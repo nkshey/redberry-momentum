@@ -1,4 +1,4 @@
-import { useStatuses, useTasks } from "../../api/apis";
+import { useStatuses, useTasks } from "../../api/useApis";
 import { statusColors } from "../../utils/constants";
 import TaskCard from "./TaskCard";
 import TaskStatus from "./TaskStatus";

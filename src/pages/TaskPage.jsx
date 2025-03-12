@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useSpecificTask, useStatuses } from "../api/apis";
+import { useSpecificTask, useStatuses } from "../api/useApis";
 import TaskPageInfo from "../components/task-page/TaskPageInfo";
 import PieChartIcon from "../ui/icons/PieChartIcon";
 import UserIcon from "../ui/icons/UserIcon";
