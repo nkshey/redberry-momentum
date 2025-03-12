@@ -2,13 +2,7 @@ import axios from "axios";
 
 const token = import.meta.env.VITE_REDBERRY_TOKEN;
 
-export async function fetchStatuses() {
-  const { data } = await axios.get(
-    "https://momentum.redberryinternship.ge/api/statuses",
-  );
-  return data;
-}
-
+// Token Needed
 export async function fetchTasks() {
   const { data } = await axios.get(
     "https://momentum.redberryinternship.ge/api/tasks",
@@ -33,6 +27,26 @@ export async function getTaskById(id) {
   return data;
 }
 
+export async function fetchEmployees() {
+  const { data } = await axios.get(
+    "https://momentum.redberryinternship.ge/api/employees",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return data;
+}
+
+// No Token Needed
+export async function fetchStatuses() {
+  const { data } = await axios.get(
+    "https://momentum.redberryinternship.ge/api/statuses",
+  );
+  return data;
+}
+
 export async function fetchDepartments() {
   const { data } = await axios.get(
     "https://momentum.redberryinternship.ge/api/departments",
@@ -43,18 +57,6 @@ export async function fetchDepartments() {
 export async function fetchPriorities() {
   const { data } = await axios.get(
     "https://momentum.redberryinternship.ge/api/priorities",
-  );
-  return data;
-}
-
-export async function fetchEmployees() {
-  const { data } = await axios.get(
-    "https://momentum.redberryinternship.ge/api/employees",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
   );
   return data;
 }
