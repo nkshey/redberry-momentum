@@ -49,9 +49,11 @@
   --color-white: #ffffff;
   --color-purple: #8338ec;
   --color-light-purple: #b588f4;
+  --color-very-light-purple: #fbf9ff;
   --color-dark-gray: #212529;
   --color-gray: #343a40;
-  --color-light-gray: #dee2e6;
+  --color-light-gray: #6c757d;
+  --color-very-light-gray: #dee2e6;
   --color-yellow: #f7bc30;
   --color-orange: #fb5607;
   --color-pink: #ff006e;
