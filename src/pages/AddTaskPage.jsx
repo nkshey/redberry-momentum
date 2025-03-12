@@ -1,5 +1,5 @@
-import AddTaskForm from "../components/AddTaskForm";
 import PageTitle from "../components/PageTitle";
+import AddTaskForm from "../components/forms/AddTaskForm";
 
 function AddTaskPage() {
   return (
