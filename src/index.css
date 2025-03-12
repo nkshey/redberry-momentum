@@ -60,3 +60,20 @@
   --color-light-pink: #ff66a8;
   --color-blue: #3a86ff;
 }
+
+/* Add to your CSS file */
+.task-card {
+  transition: all 0.15s ease;
+  box-shadow: 0px 0px 0px 0px transparent;
+}
+
+.task-card:hover {
+  background-color: color-mix(in oklab, var(--status-color) 5%, transparent);
+  transform: translateY(-4px);
+  box-shadow: 0px 10px 0px 0px var(--status-color);
+}
+
+.task-card:active {
+  transform: translateY(0px);
+  box-shadow: 0px 0px 0px 0px transparent;
+}
