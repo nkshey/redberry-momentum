@@ -1,13 +1,13 @@
-import AssignmentsList from "../components/assignment/AssignmentsList";
-import FilterPanel from "../components/filter/FilterPanel";
+import TasksList from "../components/task/TasksList";
+import FilterBar from "../components/filter/FilterBar";
 import PageTitle from "../components/PageTitle";
 
 function HomePage() {
   return (
     <section>
       <PageTitle className="mb-13">დავალებების გვერდი</PageTitle>
-      <FilterPanel />
-      <AssignmentsList />
+      <FilterBar />
+      <TasksList />
     </section>
   );
 }
