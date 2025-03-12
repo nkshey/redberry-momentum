@@ -1,32 +1,16 @@
-import ChevronIcon from "../../ui/icons/ChevronIcon";
+import PrimaryButton from "../../ui/buttons/PrimaryButton";
 
-const filters = [
-  {
-    id: 1,
-    name: "დეპარტამენტი",
-  },
-  {
-    id: 2,
-    name: "პრიორიტეტი",
-  },
-  {
-    id: 3,
-    name: "თანამშრომელი",
-  },
-];
-
-function FilterPanel() {
+function FilterPanel({ ref, children }) {
   return (
-    <div className="border-light-gray mb-20 grid w-fit grid-cols-[repeat(3,200px)] items-center gap-[2.8125rem] rounded-[0.625rem] border">
-      {filters.map((filter) => (
-        <button
-          className="flex h-11 cursor-pointer items-center justify-center gap-2"
-          key={filter.id}
-        >
-          {filter.name}
-          <ChevronIcon />
-        </button>
-      ))}
+    <div
+      className="border-purple absolute top-[calc(100%+0.625rem)] -left-[1px] w-fit min-w-[calc(100%+2px)] rounded-[0.625rem] border bg-white px-7.5 pt-10 pb-5"
+      ref={ref}
+    >
+      {children}
+
+      <PrimaryButton className="mt-6 h-9 place-self-end rounded-full px-12.5">
+        არჩევა
+      </PrimaryButton>
     </div>
   );
 }
