@@ -7,8 +7,10 @@ import { statusColors } from "../../utils/constants";
 function TaskCard({ task }) {
   return (
     <Link
-      className="flex cursor-pointer flex-col gap-7 rounded-[0.9375rem] border p-5"
-      style={{ borderColor: statusColors[task.status.name] }}
+      className="task-card flex cursor-pointer flex-col gap-7 rounded-[0.9375rem] p-5"
+      style={{
+        "--status-color": statusColors[task.status.name],
+      }}
       to={`/task/${task.id}`}
     >
       <Header priority={task.priority} date={task.due_date} />
