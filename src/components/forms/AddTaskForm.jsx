@@ -1,7 +1,7 @@
-import Input from "../ui/inputs/Input";
-import TextArea from "../ui/inputs/TextArea";
-import Dropdown from "../ui/inputs/Dropdown";
-import PrimaryButton from "../ui/buttons/PrimaryButton";
+import Input from "../../ui/inputs/Input";
+import TextArea from "../../ui/inputs/TextArea";
+import Dropdown from "../../ui/inputs/Dropdown";
+import PrimaryButton from "../../ui/buttons/PrimaryButton";
 
 function AddTaskForm() {
   return (
