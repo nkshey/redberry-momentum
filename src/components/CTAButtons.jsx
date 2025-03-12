@@ -7,7 +7,7 @@ function CTAButtons() {
     <div className="flex items-center gap-10">
       <SecondaryButton>თანამშრომლის დამატება</SecondaryButton>
 
-      <PrimaryButton>
+      <PrimaryButton className="h-10">
         <PlusIcon />
         შექმენი ახალი დავალება
       </PrimaryButton>
