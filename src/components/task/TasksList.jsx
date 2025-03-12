@@ -1,5 +1,4 @@
 import { useStatuses, useTasks } from "../../api/useApis";
-import { statusColors } from "../../utils/constants";
 import TaskCard from "./TaskCard";
 import TaskStatus from "./TaskStatus";
 
@@ -13,10 +12,7 @@ function TasksList() {
     <div className="grid grid-cols-4 gap-13">
       {statuses?.map((status) => (
         <div key={status.id}>
-          <TaskStatus
-            className={statusColors[status.name]}
-            status={status.name}
-          />
+          <TaskStatus name={status.name} />
 
           <ul className="flex flex-col gap-7.5">
             {tasks
