@@ -1,0 +1,34 @@
+import { useStatuses, useTasks } from "../../api/apis";
+import { statusColors } from "../../utils/constants";
+import TaskCard from "./TaskCard";
+import TaskStatus from "./TaskStatus";
+
+function TasksList() {
+  const { data: statuses, isLoading: statusesLoading } = useStatuses();
+  const { data: tasks, isLoading: tasksLoading } = useTasks();
+
+  if (statusesLoading || tasksLoading) return <div>Loading...</div>;
+
+  return (
+    <div className="grid grid-cols-4 gap-13">
+      {statuses?.map((status) => (
+        <div key={status.id}>
+          <TaskStatus
+            className={statusColors[status.name]}
+            status={status.name}
+          />
+
+          <ul className="flex flex-col gap-7.5">
+            {tasks
+              .filter((task) => task.status.name === status.name)
+              .map((task) => (
+                <TaskCard key={task.id} task={task} />
+              ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default TasksList;
