@@ -41,12 +41,14 @@ function CheckBox({ filter, filterType, onChange }) {
             src={filter.avatar}
             alt={`${filter.name} ${filter.surname}`}
           />
-          <span>
+          <span className={`${isChecked ? "text-purple" : ""}`}>
             {filter.name} {filter.surname}
           </span>
         </div>
       ) : (
-        <span className="text-sm leading-[1em]">{filter.name}</span>
+        <span className={`leading-[1em] ${isChecked ? "text-purple" : ""}`}>
+          {filter.name}
+        </span>
       )}
     </label>
   );
