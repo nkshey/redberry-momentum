@@ -1,8 +1,13 @@
 import { usePriorities } from "../../../api/useApis";
+import { useFilterInit } from "../../../hooks/useFilterInit";
+import useFilterStore, { FILTER_TYPES } from "../../../stores/useFilterStore";
 import CheckBox from "../../../ui/inputs/CheckBox";
 
 function PriorityFilterBody() {
   const { data: priorities, isLoading } = usePriorities();
+  const togglePriority = useFilterStore((state) => state.togglePriority);
+
+  useFilterInit(FILTER_TYPES.PRIORITIES);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -10,7 +15,11 @@ function PriorityFilterBody() {
     <ul className="grid gap-5.5">
       {priorities.map((priority) => (
         <li className="select-none" key={priority.id}>
-          <CheckBox id={priority.id}>{priority.name}</CheckBox>
+          <CheckBox
+            filter={priority}
+            filterType={FILTER_TYPES.PRIORITIES}
+            onChange={() => togglePriority(priority)}
+          />
         </li>
       ))}
     </ul>
