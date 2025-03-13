@@ -11,8 +11,6 @@ function TaskPage() {
   const { data: task, isLoading: taskLoading } = useSpecificTask(id);
   const { data: statuses, isLoading: statusesLoading } = useStatuses();
 
-  console.log(task);
-  console.log(statuses);
   if (taskLoading || statusesLoading) return <div>Loading...</div>;
 
   return (
