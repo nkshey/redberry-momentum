@@ -15,7 +15,7 @@ function TaskCard({ task }) {
     >
       <Header priority={task.priority} date={task.due_date} />
       <Info name={task.name} description={task.description} />
-      <Author employee={task.employee} />
+      <Author employee={task.employee} comments={task.total_comments} />
     </Link>
   );
 }
@@ -45,7 +45,7 @@ function Info({ name, description }) {
   );
 }
 
-function Author({ employee }) {
+function Author({ employee, comments }) {
   return (
     <div className="flex items-center justify-between">
       <img
@@ -55,7 +55,8 @@ function Author({ employee }) {
       />
 
       <div className="flex items-center gap-1 text-sm">
-        <CommentsIcon />8
+        <CommentsIcon />
+        <span>{comments}</span>
       </div>
     </div>
   );
