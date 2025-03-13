@@ -1,28 +1,41 @@
-import { useStatuses, useTasks } from "../../api/useApis";
+import { useStatuses } from "../../api/useApis";
+import useFilteredTasks from "../../hooks/useFilteredTasks";
+
 import TaskCard from "./TaskCard";
 import TaskStatus from "./TaskStatus";
 
 function TasksList() {
   const { data: statuses, isLoading: statusesLoading } = useStatuses();
-  const { data: tasks, isLoading: tasksLoading } = useTasks();
+  const { filteredTasks, isLoading: tasksLoading } = useFilteredTasks();
 
   if (statusesLoading || tasksLoading) return <div>Loading...</div>;
 
   return (
     <div className="grid grid-cols-4 gap-13">
-      {statuses?.map((status) => (
-        <div key={status.id}>
-          <TaskStatus name={status.name} />
+      {statuses?.map((status) => {
+        const tasksForStatus = filteredTasks.filter(
+          (task) => task.status.name === status.name,
+        );
 
-          <ul className="flex flex-col gap-7.5">
-            {tasks
-              .filter((task) => task.status.name === status.name)
-              .map((task) => (
-                <TaskCard key={task.id} task={task} />
-              ))}
-          </ul>
-        </div>
-      ))}
+        return (
+          <div key={status.id}>
+            <TaskStatus name={status.name} />
+
+            <ul className="flex flex-col gap-7.5">
+              {tasksForStatus.length > 0 &&
+                tasksForStatus.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+            </ul>
+          </div>
+        );
+      })}
+
+      {filteredTasks.length === 0 && (
+        <p className="col-span-full place-self-center">
+          დავალებები არ მოიძებნა
+        </p>
+      )}
     </div>
   );
 }
