@@ -32,7 +32,7 @@ function FilterBar() {
   ];
 
   return (
-    <div className="border-very-light-gray relative mb-20 grid w-fit grid-cols-[repeat(3,200px)] items-center gap-[2.8125rem] rounded-[0.625rem] border">
+    <div className="border-very-light-gray relative grid w-fit grid-cols-[repeat(3,200px)] items-center gap-[2.8125rem] rounded-[0.625rem] border">
       {filterOptions.map((filter) => (
         <FilterOption
           key={filter.id}
