@@ -1,9 +1,9 @@
 import { priorityColors } from "../utils/constants";
 
-function PriorityBadge({ priority }) {
+function PriorityBadge({ priority, className }) {
   return (
     <div
-      className="flex h-6.5 w-21.5 items-center justify-center gap-1 rounded-sm border text-xs"
+      className={`flex w-max items-center justify-center gap-1 rounded-sm border p-1 ${className}`}
       style={{
         borderColor: priorityColors[priority.name],
         color: priorityColors[priority.name],
