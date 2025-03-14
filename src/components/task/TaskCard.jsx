@@ -30,7 +30,7 @@ function Header({ priority, department, date }) {
   return (
     <div className="flex items-center justify-between gap-2.5">
       <div className="flex items-center gap-2.5">
-        <PriorityBadge priority={priority} />
+        <PriorityBadge className="text-xs" priority={priority} />
 
         <span className="bg-light-pink grid h-6 place-content-center rounded-full text-xs text-white">
           {department}
