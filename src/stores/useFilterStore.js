@@ -33,23 +33,14 @@ const useFilterStore = create(
             (d) => d.id === department.id,
           );
 
-          if (exists) {
-            return {
-              temp: {
-                ...state.temp,
-                departments: state.temp.departments.filter(
-                  (d) => d.id !== department.id,
-                ),
-              },
-            };
-          } else {
-            return {
-              temp: {
-                ...state.temp,
-                departments: [...state.temp.departments, department],
-              },
-            };
-          }
+          return {
+            temp: {
+              ...state.temp,
+              departments: exists
+                ? state.temp.departments.filter((d) => d.id !== department.id)
+                : [...state.temp.departments, department],
+            },
+          };
         }),
 
       // Toggle priority selection in temp state
@@ -59,23 +50,14 @@ const useFilterStore = create(
             (p) => p.id === priority.id,
           );
 
-          if (exists) {
-            return {
-              temp: {
-                ...state.temp,
-                priorities: state.temp.priorities.filter(
-                  (p) => p.id !== priority.id,
-                ),
-              },
-            };
-          } else {
-            return {
-              temp: {
-                ...state.temp,
-                priorities: [...state.temp.priorities, priority],
-              },
-            };
-          }
+          return {
+            temp: {
+              ...state.temp,
+              priorities: exists
+                ? state.temp.departments.filter((p) => p.id !== priority.id)
+                : [...state.temp.departments, priority],
+            },
+          };
         }),
 
       // Set employee in temp state
@@ -84,24 +66,6 @@ const useFilterStore = create(
           temp: {
             ...state.temp,
             employee: state.temp.employee?.id === employee.id ? null : employee,
-          },
-        })),
-
-      // Initialize temp state from filters for a specific filter type
-      initTemp: (filterType) =>
-        set((state) => ({
-          temp: {
-            ...state.temp,
-            [filterType]: state.filters[filterType],
-          },
-        })),
-
-      // Commit temp state to filters for a specific filter type
-      commitFilter: (filterType) =>
-        set((state) => ({
-          filters: {
-            ...state.filters,
-            [filterType]: state.temp[filterType],
           },
         })),
 
@@ -149,6 +113,24 @@ const useFilterStore = create(
           temp: {
             ...state.temp,
             employee: null,
+          },
+        })),
+
+      // Initialize temp state from filters for a specific filter type
+      initTemp: (filterType) =>
+        set((state) => ({
+          temp: {
+            ...state.temp,
+            [filterType]: state.filters[filterType],
+          },
+        })),
+
+      // Commit temp state to filters for a specific filter type
+      commitFilter: (filterType) =>
+        set((state) => ({
+          filters: {
+            ...state.filters,
+            [filterType]: state.temp[filterType],
           },
         })),
 
