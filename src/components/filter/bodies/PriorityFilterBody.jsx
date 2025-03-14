@@ -12,7 +12,7 @@ function PriorityFilterBody() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <ul className="grid gap-5.5">
+    <ul className="grid max-h-38.5 gap-5.5 overflow-y-auto overscroll-none">
       {priorities.map((priority) => (
         <li className="select-none" key={priority.id}>
           <CheckBox

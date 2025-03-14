@@ -12,7 +12,7 @@ function DepartmentFilterBody() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <ul className="grid grid-cols-[auto_auto] gap-5.5">
+    <ul className="grid max-h-38.5 gap-5.5 overflow-y-auto overscroll-none">
       {departments.map((department) => (
         <li className="select-none" key={department.id}>
           <CheckBox

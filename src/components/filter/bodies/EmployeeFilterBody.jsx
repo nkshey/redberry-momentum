@@ -12,7 +12,7 @@ function EmployeeFilterBody() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <ul className="grid grid-cols-[auto_auto] gap-5.5">
+    <ul className="grid max-h-44.5 gap-5.5 overflow-y-auto overscroll-none">
       {employees.map((employee) => (
         <li className="leading-[1em] select-none" key={employee.id}>
           <CheckBox
