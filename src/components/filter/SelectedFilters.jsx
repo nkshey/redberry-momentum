@@ -13,8 +13,6 @@ function SelectedFilters() {
     filters.priorities.length > 0 ||
     filters.employee !== null;
 
-  console.log(filters);
-
   return (
     <div className="my-6 flex min-h-7 items-start gap-4.5">
       <ul className="flex flex-wrap items-center gap-2">
