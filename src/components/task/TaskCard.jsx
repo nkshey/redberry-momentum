@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { statusColors } from "../../utils/constants";
 
 function TaskCard({ task }) {
+  console.log(task);
+
   return (
     <Link
       className="task-card flex cursor-pointer flex-col gap-7 rounded-[0.9375rem] p-5"
@@ -13,21 +15,25 @@ function TaskCard({ task }) {
       }}
       to={`/task/${task.id}`}
     >
-      <Header priority={task.priority} date={task.due_date} />
+      <Header
+        priority={task.priority}
+        department={task.department.name}
+        date={task.due_date}
+      />
       <Info name={task.name} description={task.description} />
       <Author employee={task.employee} comments={task.total_comments} />
     </Link>
   );
 }
 
-function Header({ priority, date }) {
+function Header({ priority, department, date }) {
   return (
     <div className="flex items-center justify-between gap-2.5">
       <div className="flex items-center gap-2.5">
         <PriorityBadge priority={priority} />
 
-        <span className="bg-light-pink grid h-6 w-22 place-content-center rounded-full text-xs text-white">
-          დიზაინი
+        <span className="bg-light-pink grid h-6 place-content-center rounded-full text-xs text-white">
+          {department}
         </span>
       </div>
 
