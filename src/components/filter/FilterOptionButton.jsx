@@ -10,7 +10,11 @@ function FilterOptionButton({ ref, name, isOpen, onClick }) {
       <span>{name}</span>
 
       <ChevronIcon
-        className={`transition-all ${isOpen ? "fill-purple -rotate-180" : "group-hover:fill-light-purple group-active:fill-purple"}`}
+        className={
+          isOpen
+            ? "fill-purple -rotate-180"
+            : "group-hover:fill-light-purple group-active:fill-purple"
+        }
       />
     </button>
   );
