@@ -6,6 +6,7 @@ import {
   fetchDepartments,
   fetchPriorities,
   fetchEmployees,
+  getCommentsById,
 } from "./fetchers";
 
 export function useStatuses() {
@@ -26,6 +27,13 @@ export function useSpecificTask(id) {
   return useQuery({
     queryKey: ["task", id],
     queryFn: () => getTaskById(id),
+  });
+}
+
+export function useComments(id) {
+  return useQuery({
+    queryKey: ["comments", id],
+    queryFn: () => getCommentsById(id),
   });
 }
 
