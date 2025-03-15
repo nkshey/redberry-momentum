@@ -26,7 +26,7 @@ function CommentsSection({ taskId }) {
     <section className="mt-11.5 h-fit rounded-[0.625rem] border-[#DDD2FF] bg-[#f8f3fe]/65 px-[2.8125rem] pt-10 pb-13">
       <div className="relative mb-16.5">
         <TextArea
-          className="rounded-[0.625rem] p-5 text-sm placeholder:text-[#898989]"
+          className="h-33.5 rounded-[0.625rem] p-5 text-sm placeholder:text-[#898989]"
           placeholder="დაწერე კომენტარი"
           value={text}
           onChange={(e) => setText(e.target.value)}
