@@ -74,11 +74,12 @@ export async function getCommentsById(taskId) {
 }
 
 // Post Requests
-export async function addCommentToTask(taskId, text) {
+export async function addCommentToTask(taskId, text, parent_id = null) {
   const { data } = await axios.post(
     `https://momentum.redberryinternship.ge/api/tasks/${taskId}/comments`,
     {
       text,
+      parent_id,
     },
     {
       headers: {
