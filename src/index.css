@@ -46,6 +46,7 @@
 
   /* Colors */
   --color-*: initial;
+  --color-black: #000000;
   --color-white: #ffffff;
   --color-purple: #8338ec;
   --color-light-purple: #b588f4;
