@@ -4,12 +4,20 @@ import CommentItem from "./CommentItem";
 function CommentsList({ taskId }) {
   const { data: comments, isLoading } = useComments(taskId);
 
+  const totalComments = !comments
+    ? null
+    : comments.length +
+      comments.reduce(
+        (total, comment) => total + (comment.sub_comments?.length || 0),
+        0,
+      );
+
   return (
     <div>
       <h3 className="mb-10 flex items-center gap-1.5 text-xl leading-[1em] font-medium text-black">
         კომენტარები
         <span className="bg-purple grid h-5.5 w-7.5 place-content-center rounded-full text-sm text-white">
-          {isLoading ? "..." : comments.length}
+          {totalComments ?? "..."}
         </span>
       </h3>
 

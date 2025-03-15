@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ArrowIcon from "../../../ui/icons/ArrowIcon";
 import TextArea from "../../../ui/inputs/TextArea";
+import CommentTextArea from "../../../ui/inputs/CommentTextArea";
 
 function CommentItem({ comment }) {
   const [isReplyOpen, setIsReplyOpen] = useState(false);
@@ -26,7 +27,14 @@ function CommentItem({ comment }) {
             <ArrowIcon /> უპასუხე
           </button>
 
-          {isReplyOpen && <TextArea className="mt-2 h-24 w-full rounded-lg" />}
+          {isReplyOpen && (
+            <CommentTextArea
+              className="mt-5"
+              taskId={comment.task_id}
+              parentId={comment.id}
+              onCommentSubmitted={() => setIsReplyOpen(false)}
+            />
+          )}
 
           {comment.sub_comments.length > 0 && (
             <ul className="mt-5 flex flex-col gap-5">
