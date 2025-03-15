@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useComments, useStatuses } from "../../../api/useApis";
+import { useStatuses } from "../../../api/useApis";
 import PrimaryButton from "../../../ui/buttons/PrimaryButton";
 import CalendarIcon from "../../../ui/icons/CalendarIcon";
 import PieChartIcon from "../../../ui/icons/PieChartIcon";
