@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useComments } from "../../../api/useApis";
 import CommentItem from "./CommentItem";
 
@@ -11,6 +12,11 @@ function CommentsList({ taskId }) {
         (total, comment) => total + (comment.sub_comments?.length || 0),
         0,
       );
+
+  const sortedComments = useMemo(
+    () => (comments ? [...comments].reverse() : []),
+    [comments],
+  );
 
   return (
     <div>
@@ -28,7 +34,7 @@ function CommentsList({ taskId }) {
 
       {!isLoading && comments.length > 0 && (
         <ul className="flex flex-col gap-9.5">
-          {comments.map((comment) => (
+          {sortedComments.map((comment) => (
             <CommentItem key={comment.id} comment={comment} />
           ))}
         </ul>
