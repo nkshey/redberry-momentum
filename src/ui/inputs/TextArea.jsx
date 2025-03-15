@@ -14,7 +14,7 @@ function TextArea({
       </label>
 
       <textarea
-        className={`border-very-light-gray h-33.5 resize-none border bg-white ${className}`}
+        className={`border-very-light-gray resize-none border bg-white ${className}`}
         id={name}
         name={name}
         placeholder={placeholder}
