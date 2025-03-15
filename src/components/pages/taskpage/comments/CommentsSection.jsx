@@ -1,5 +1,5 @@
 import CommentsList from "./CommentsList";
-import CommentTextArea from "../../../ui/inputs/CommentTextArea";
+import CommentTextArea from "../../../../ui/inputs/CommentTextArea";
 
 function CommentsSection({ taskId }) {
   return (

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useComments } from "../../../api/useApis";
+import { useComments } from "../../../../api/useApis";
 import CommentItem from "./CommentItem";
 
 function CommentsList({ taskId }) {

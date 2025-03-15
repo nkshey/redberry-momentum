@@ -1,7 +1,7 @@
 import { useState } from "react";
-import ArrowIcon from "../../../ui/icons/ArrowIcon";
-import TextArea from "../../../ui/inputs/TextArea";
-import CommentTextArea from "../../../ui/inputs/CommentTextArea";
+import ArrowIcon from "../../../../ui/icons/ArrowIcon";
+import TextArea from "../../../../ui/inputs/TextArea";
+import CommentTextArea from "../../../../ui/inputs/CommentTextArea";
 
 function CommentItem({ comment }) {
   const [isReplyOpen, setIsReplyOpen] = useState(false);
