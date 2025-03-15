@@ -1,0 +1,32 @@
+import { useComments } from "../../../api/useApis";
+import CommentItem from "./CommentItem";
+
+function CommentsList({ taskId }) {
+  const { data: comments, isLoading } = useComments(taskId);
+
+  return (
+    <div>
+      <h3 className="mb-10 flex items-center gap-1.5 text-xl leading-[1em] font-medium text-black">
+        კომენტარები
+        <span className="bg-purple grid h-5.5 w-7.5 place-content-center rounded-full text-sm text-white">
+          {isLoading ? "..." : comments.length}
+        </span>
+      </h3>
+
+      {isLoading && <p className="text-center">იტვირთება...</p>}
+      {!isLoading && comments.length === 0 && (
+        <p className="text-center">კომენტარები არ არის.</p>
+      )}
+
+      {!isLoading && comments.length > 0 && (
+        <ul className="flex flex-col gap-9.5">
+          {comments.map((comment) => (
+            <CommentItem key={comment.id} comment={comment} />
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export default CommentsList;
