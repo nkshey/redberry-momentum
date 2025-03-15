@@ -1,4 +1,4 @@
-function UserIcon({ width = 22, height = 22 }) {
+function UserIcon({ width = 24, height = 24 }) {
   return (
     <svg
       width={width}
