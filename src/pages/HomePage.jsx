@@ -5,16 +5,16 @@ import SelectedFilters from "../components/filter/SelectedFilters";
 
 function HomePage() {
   return (
-    <section>
+    <>
       <PageTitle className="mb-13">დავალებების გვერდი</PageTitle>
 
-      <div>
+      <section>
         <FilterBar />
         <SelectedFilters />
-      </div>
+      </section>
 
       <TasksList />
-    </section>
+    </>
   );
 }
 
