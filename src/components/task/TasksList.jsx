@@ -11,7 +11,7 @@ function TasksList() {
   if (statusesLoading || tasksLoading) return <div>Loading...</div>;
 
   return (
-    <div className="grid grid-cols-4 gap-13">
+    <section className="grid grid-cols-4 gap-13">
       {statuses?.map((status) => {
         const tasksForStatus = filteredTasks.filter(
           (task) => task.status.name === status.name,
@@ -36,7 +36,7 @@ function TasksList() {
           დავალებები არ მოიძებნა
         </p>
       )}
-    </div>
+    </section>
   );
 }
 
