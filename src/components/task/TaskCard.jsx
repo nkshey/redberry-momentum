@@ -5,8 +5,6 @@ import { Link } from "react-router-dom";
 import { statusColors } from "../../utils/constants";
 
 function TaskCard({ task }) {
-  console.log(task);
-
   return (
     <Link
       className="task-card flex cursor-pointer flex-col gap-7 rounded-[0.9375rem] p-5"
