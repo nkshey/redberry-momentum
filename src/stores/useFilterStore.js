@@ -54,8 +54,8 @@ const useFilterStore = create(
             temp: {
               ...state.temp,
               priorities: exists
-                ? state.temp.departments.filter((p) => p.id !== priority.id)
-                : [...state.temp.departments, priority],
+                ? state.temp.priorities.filter((p) => p.id !== priority.id)
+                : [...state.temp.priorities, priority],
             },
           };
         }),
