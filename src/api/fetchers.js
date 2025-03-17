@@ -92,6 +92,21 @@ export async function addCommentToTask(taskId, text, parent_id = null) {
   return data;
 }
 
+export async function addTask(formData) {
+  const { data } = await axios.post(
+    `https://momentum.redberryinternship.ge/api/tasks`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  return data;
+}
+
 // Put Requests
 export async function updateTaskStatus(taskId, status_id) {
   const { data } = await axios.put(
