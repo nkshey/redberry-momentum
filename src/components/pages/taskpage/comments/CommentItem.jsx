@@ -19,7 +19,7 @@ function CommentItem({ comment }) {
           <p className="mb-2 text-lg leading-[1em] font-medium">
             {comment.author_nickname}
           </p>
-          <p className="text-gray mb-2.5">{comment.text}</p>
+          <p className="text-gray mb-2.5 break-words">{comment.text}</p>
           <button
             className="text-purple flex cursor-pointer items-center gap-1.5 text-xs"
             onClick={() => setIsReplyOpen(true)}
@@ -50,7 +50,9 @@ function CommentItem({ comment }) {
                       <p className="mb-2 text-lg leading-[1em] font-medium">
                         {sub_comment.author_nickname}
                       </p>
-                      <p className="text-gray mb-2.5">{sub_comment.text}</p>
+                      <p className="text-gray mb-2.5 break-words">
+                        {sub_comment.text}
+                      </p>
                     </div>
                   </div>
                 </li>
