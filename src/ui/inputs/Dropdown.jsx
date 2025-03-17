@@ -21,6 +21,8 @@ const Dropdown = ({ className, label, data, value, onChange, ...props }) => {
     setIsOpen(false);
   }
 
+  console.log(selectedItem);
+
   return (
     <div className="dropdown-container flex flex-col" ref={dropdownRef}>
       <label className="text-gray mb-1.5 leading-[1em]">{label}</label>
@@ -37,8 +39,19 @@ const Dropdown = ({ className, label, data, value, onChange, ...props }) => {
         {/* Show selected item or placeholder */}
         <div className="text-sm font-light">
           {selectedItem ? (
-            <div className="flex items-center gap-1.5">
-              {selectedItem.icon && <img src={selectedItem.icon} alt="" />}
+            <div
+              className={`flex items-center ${selectedItem.avatar ? "gap-2.5" : "gap-1.5"}`}
+            >
+              {selectedItem.icon && (
+                <img src={selectedItem.icon} alt="priority" />
+              )}
+              {selectedItem.avatar && (
+                <img
+                  className="size-7.5 rounded-full object-cover"
+                  src={selectedItem.avatar}
+                  alt={selectedItem.name}
+                />
+              )}
               <span>{selectedItem.name}</span>
             </div>
           ) : (
@@ -62,7 +75,14 @@ const Dropdown = ({ className, label, data, value, onChange, ...props }) => {
                 className="hover:text-light-purple active:text-purple flex h-11.5 items-center gap-1.5 px-3.5 transition-colors"
                 onClick={() => handleItemClick(item)}
               >
-                {item.icon && <img src={item.icon} alt="" />}
+                {item.icon && <img src={item.icon} alt={item.name} />}
+                {item.avatar && (
+                  <img
+                    className="size-7 rounded-full object-cover"
+                    src={item.avatar}
+                    alt={item.name}
+                  />
+                )}
                 <span>{item.name}</span>
               </li>
             ))}
