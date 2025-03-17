@@ -143,7 +143,7 @@ const useFilterStore = create(
     }),
     {
       name: "momentum-filters",
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 );

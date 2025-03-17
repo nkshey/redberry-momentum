@@ -9,7 +9,7 @@ function FilterNavigationHandler() {
   useEffect(() => {
     if (location.pathname !== "/") {
       clearAllFilters();
-      localStorage.removeItem("momentum-filters");
+      sessionStorage.removeItem("momentum-filters");
     }
   }, [location.pathname, clearAllFilters]);
 
