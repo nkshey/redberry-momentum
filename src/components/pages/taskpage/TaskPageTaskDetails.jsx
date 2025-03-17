@@ -63,10 +63,13 @@ function TaskPageTaskDetails({
 }
 
 function Status({ currentStatus, onStatusChange }) {
-  const { data, isLoading } = useStatuses();
+  const { data } = useStatuses();
 
-  function handleStatusChange(item) {
-    onStatusChange(item);
+  function handleStatusChange(statusId) {
+    const selectedStatus = data.find((status) => status.id === statusId);
+    if (selectedStatus) {
+      onStatusChange(selectedStatus);
+    }
   }
 
   return (
@@ -78,10 +81,9 @@ function Status({ currentStatus, onStatusChange }) {
 
       <Dropdown
         className="w-65"
-        selected={currentStatus.name}
         data={data}
-        isLoading={isLoading}
-        handleSelect={handleStatusChange}
+        value={currentStatus.id}
+        onChange={handleStatusChange}
       />
     </div>
   );
