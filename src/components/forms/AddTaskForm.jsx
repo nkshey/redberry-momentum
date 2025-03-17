@@ -8,8 +8,12 @@ import {
   usePriorities,
   useStatuses,
 } from "../../api/useApis";
-import { useState, useEffect } from "react";
-import { getTomorrowDate } from "../../utils/helpers";
+import { useState, useEffect, useRef } from "react";
+import {
+  getFromSessionStorage,
+  getTomorrowDate,
+  saveToSessionStorage,
+} from "../../utils/helpers";
 import { addTask } from "../../api/fetchers";
 import { useNavigate } from "react-router-dom";
 
@@ -22,14 +26,21 @@ const initialFormData = {
   employee_id: null,
 };
 
+const STORAGE_KEY = "task_form_data";
+const DEPARTMENT_KEY = "task_form_department";
+
 function AddTaskForm() {
   const navigate = useNavigate();
 
   // Initial form state with the exact structure needed for backend
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState(() =>
+    getFromSessionStorage(STORAGE_KEY, initialFormData),
+  );
 
   // Track UI state (not sent to backend)
-  const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState(() =>
+    getFromSessionStorage(DEPARTMENT_KEY, null),
+  );
 
   // Track validation state
   const [errors, setErrors] = useState({});
@@ -42,10 +53,28 @@ function AddTaskForm() {
   const { data: departments, isLoading: departmentsLoading } = useDepartments();
   const { data: employees, isLoading: employeesLoading } = useEmployees();
 
-  // Reset employee when department changes
+  // Save form data to sessionStorage whenever it changes
   useEffect(() => {
-    if (selectedDepartmentId) {
+    saveToSessionStorage(STORAGE_KEY, formData);
+  }, [formData]);
+
+  // Save department ID to sessionStorage whenever it changes
+  useEffect(() => {
+    saveToSessionStorage(DEPARTMENT_KEY, selectedDepartmentId);
+  }, [selectedDepartmentId]);
+
+  // Track department changes with a ref
+  const prevDepartmentIdRef = useRef(selectedDepartmentId);
+
+  // Reset employee only when department actually changes
+  useEffect(() => {
+    // Only reset employee if department changed to a different value
+    if (
+      selectedDepartmentId &&
+      selectedDepartmentId !== prevDepartmentIdRef.current
+    ) {
       setFormData((prev) => ({ ...prev, employee_id: null }));
+      prevDepartmentIdRef.current = selectedDepartmentId;
     }
   }, [selectedDepartmentId]);
 
@@ -228,6 +257,8 @@ function AddTaskForm() {
 
     if (isValid) {
       addTask(formData);
+      sessionStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(DEPARTMENT_KEY);
       setFormData(initialFormData);
       navigate("/");
     }
