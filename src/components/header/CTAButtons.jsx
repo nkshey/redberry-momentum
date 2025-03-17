@@ -2,11 +2,17 @@ import { Link } from "react-router-dom";
 import PrimaryButton from "../../ui/buttons/PrimaryButton";
 import SecondaryButton from "../../ui/buttons/SecondaryButton";
 import PlusIcon from "../../ui/icons/PlusIcon";
+import { useState } from "react";
+import AddEmployeeModal from "../AddEmployeeModal";
 
 function CTAButtons() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="flex items-center gap-10">
-      <SecondaryButton>თანამშრომლის დამატება</SecondaryButton>
+      <SecondaryButton className="h-10" onClick={() => setIsModalOpen(true)}>
+        თანამშრომლის დამატება
+      </SecondaryButton>
 
       <Link to="/add">
         <PrimaryButton className="h-10">
@@ -14,6 +20,8 @@ function CTAButtons() {
           შექმენი ახალი დავალება
         </PrimaryButton>
       </Link>
+
+      {isModalOpen && <AddEmployeeModal setIsModalOpen={setIsModalOpen} />}
     </div>
   );
 }
