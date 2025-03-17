@@ -21,8 +21,6 @@ const Dropdown = ({ className, label, data, value, onChange, ...props }) => {
     setIsOpen(false);
   }
 
-  console.log(selectedItem);
-
   return (
     <div className="dropdown-container flex flex-col" ref={dropdownRef}>
       <label className="text-gray mb-1.5 leading-[1em]">{label}</label>
