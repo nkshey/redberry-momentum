@@ -107,6 +107,21 @@ export async function addTask(formData) {
   return data;
 }
 
+export async function addEmployee(formData) {
+  const { data } = await axios.post(
+    `https://momentum.redberryinternship.ge/api/employees`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+  return data;
+}
+
 // Put Requests
 export async function updateTaskStatus(taskId, status_id) {
   const { data } = await axios.put(
