@@ -13,18 +13,20 @@ import { getTomorrowDate } from "../../utils/helpers";
 import { addTask } from "../../api/fetchers";
 import { useNavigate } from "react-router-dom";
 
+const initialFormData = {
+  name: "",
+  description: "",
+  due_date: getTomorrowDate(),
+  priority_id: 2,
+  status_id: 1,
+  employee_id: null,
+};
+
 function AddTaskForm() {
   const navigate = useNavigate();
 
   // Initial form state with the exact structure needed for backend
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    due_date: getTomorrowDate(),
-    priority_id: 2,
-    status_id: 1,
-    employee_id: null,
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   // Track UI state (not sent to backend)
   const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
@@ -225,8 +227,8 @@ function AddTaskForm() {
     const isValid = validateForm();
 
     if (isValid) {
-      console.log("Form data to send:", formData);
       addTask(formData);
+      setFormData(initialFormData);
       navigate("/");
     }
   };
