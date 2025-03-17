@@ -11,6 +11,7 @@ function CommentTextArea({
 }) {
   const [text, setText] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState(false);
   const textareaRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -26,13 +27,26 @@ function CommentTextArea({
     }
   }
 
+  function handleTextChange(e) {
+    const newText = e.target.value;
+    setText(newText);
+
+    if (newText.trim() && newText.length <= 255) {
+      setError(false);
+    }
+  }
+
   async function handleAddComment() {
-    if (!text.trim()) return;
+    if (!text.trim() || text.length > 255) {
+      setError(true);
+      return;
+    }
 
     setIsUpdating(true);
 
     await addCommentToTask(taskId, text, parentId);
     setText("");
+    setError(false);
 
     queryClient.invalidateQueries(["comments", taskId]);
 
@@ -46,15 +60,15 @@ function CommentTextArea({
   return (
     <div className={`flex flex-col ${className}`}>
       <textarea
-        className="border-very-light-gray h-16 w-full resize-none rounded-[0.625rem] rounded-b-none border border-b-0 bg-white p-5 text-sm placeholder:text-[#898989] focus:outline-0"
+        className={`ay h-16 w-full resize-none rounded-[0.625rem] rounded-b-none border border-b-0 bg-white p-5 text-sm placeholder:text-[#898989] focus:outline-0 ${error ? "border-red" : "border-very-light-gray"}`}
         ref={textareaRef}
         placeholder="დაწერე კომენტარი"
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={handleTextChange}
       />
 
       <div
-        className="border-very-light-gray flex cursor-text justify-end rounded-[0.625rem] rounded-t-none border border-t-0 bg-white px-[0.9375rem] py-5"
+        className={`flex cursor-text justify-end rounded-[0.625rem] rounded-t-none border border-t-0 bg-white px-[0.9375rem] py-5 ${error ? "border-red" : "border-very-light-gray"}`}
         onClick={handleContainerClick}
       >
         <PrimaryButton
