@@ -1,25 +1,16 @@
-function TextArea({
-  className,
-  label,
-  placeholder,
-  requirement,
-  name,
-  value,
-  onChange,
-}) {
+function TextArea({ className, label, name, requirement, ...props }) {
   return (
     <div className="flex flex-col">
-      <label className="text-gray" htmlFor={name}>
+      <label className="text-gray mb-1.5 leading-[1em]" htmlFor={name}>
         {label}
       </label>
 
       <textarea
-        className={`border-very-light-gray resize-none border bg-white ${className}`}
+        className={`resize-none border bg-white focus:outline-0 ${className}`}
+        autoComplete="off"
         id={name}
         name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
+        {...props}
       />
 
       {requirement}
