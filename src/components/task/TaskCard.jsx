@@ -44,7 +44,11 @@ function Info({ name, description }) {
   return (
     <div className="px-[0.65625rem]">
       <p className="mb-3 truncate text-[0.9375rem] font-medium">{name}</p>
-      <p className="text-gray line-clamp-2 text-sm">{description}</p>
+      <p
+        className={`line-clamp-2 text-sm ${description ? "text-gray" : "text-very-light-gray"}`}
+      >
+        {description || "აღწერა არ არის..."}
+      </p>
     </div>
   );
 }
