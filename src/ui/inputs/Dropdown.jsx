@@ -33,7 +33,7 @@ const Dropdown = ({ className, label, data, value, onChange, ...props }) => {
       {/* Dropdown button */}
       <button
         type="button"
-        className={`relative flex h-11.5 cursor-pointer items-center justify-between rounded-[0.3125rem] border bg-white px-3.5 ${className} ${isOpen ? "border-purple rounded-b-none" : "border-very-light-gray"}`}
+        className={`relative flex h-11.5 cursor-pointer items-center justify-between rounded-md border bg-white px-3.5 ${className} ${isOpen ? "border-purple rounded-b-none" : "border-very-light-gray"}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         {/* Show selected item or placeholder */}
