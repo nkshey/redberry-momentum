@@ -297,6 +297,7 @@ function AddTaskForm() {
   return (
     <form
       className="bg-very-light-purple/65 grid place-content-center gap-15.5 rounded-sm border border-[#DDD2FF] px-20 py-36.5"
+      noValidate
       onSubmit={handleSubmit}
     >
       <div className="grid grid-cols-[repeat(2,minmax(auto,34.375rem))] gap-40">
@@ -333,7 +334,7 @@ function AddTaskForm() {
 
       <div className="grid grid-cols-[repeat(2,minmax(auto,34.375rem))] gap-40">
         <TextArea
-          className={`mb-1 rounded-[0.3125rem] p-3.5 ${getFieldStyle("description")}`}
+          className={`mb-1 rounded-md p-3.5 ${getFieldStyle("description")}`}
           label="აღწერა"
           requirement={
             <div
