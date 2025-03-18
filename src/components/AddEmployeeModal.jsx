@@ -1,17 +1,19 @@
+import { createPortal } from "react-dom";
 import { useRef } from "react";
-import CancelIcon from "../ui/icons/CancelIcon";
-import AddEmployeeForm from "./forms/AddEmployeeForm";
 import { useClickOutside } from "../hooks/useClickOutside";
 
-function AddEmployeeModal({ setIsModalOpen }) {
+import CancelIcon from "../ui/icons/CancelIcon";
+import AddEmployeeForm from "./forms/AddEmployeeForm";
+
+function AddEmployeeModal({ setIsModalOpen, onSuccess }) {
   const modalRef = useRef(null);
 
   useClickOutside(modalRef, () => setIsModalOpen(false));
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-9999 flex items-center justify-center bg-[#0d0f10]/15 backdrop-blur-[0.3125rem]">
       <div
-        className="w-full max-w-228 rounded-[0.625rem] bg-white px-12.5 pt-10 pb-15"
+        className="relative w-full max-w-228 rounded-[0.625rem] bg-white px-12.5 pt-10 pb-15"
         ref={modalRef}
       >
         <button
@@ -26,9 +28,13 @@ function AddEmployeeModal({ setIsModalOpen }) {
           თანამშრომლის დამატება
         </h3>
 
-        <AddEmployeeForm setIsModalOpen={setIsModalOpen} />
+        <AddEmployeeForm
+          setIsModalOpen={setIsModalOpen}
+          onSuccess={onSuccess}
+        />
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
