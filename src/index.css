@@ -57,11 +57,14 @@
   --color-very-light-gray: #dee2e6;
   --color-green: #08a508;
   --color-yellow: #f7bc30;
+  --color-light-yellow: #ffd86d;
   --color-orange: #fb5607;
+  --color-light-orange: #fd9a6a;
   --color-red: #fa4d4d;
   --color-pink: #ff006e;
   --color-light-pink: #ff66a8;
   --color-blue: #3a86ff;
+  --color-light-blue: #89b6ff;
 }
 
 /* Add to your CSS file */
