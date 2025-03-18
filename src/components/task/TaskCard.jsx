@@ -4,6 +4,17 @@ import PriorityBadge from "../../ui/PriorityBadge";
 import { Link } from "react-router-dom";
 import { statusColors } from "../../utils/constants";
 
+// Department to color mapping
+const departmentColors = {
+  "ადმინისტრაციის დეპარტამენტი": "bg-light-pink",
+  "ადამიანური რესურსების დეპარტამენტი": "bg-light-blue",
+  "ფინანსების დეპარტამენტი": "bg-light-orange",
+  "გაყიდვები და მარკეტინგის დეპარტამენტი": "bg-light-yellow",
+  "ლოჯოსტიკის დეპარტამენტი": "bg-light-pink",
+  "ტექნოლოგიების დეპარტამენტი": "bg-light-blue",
+  "მედიის დეპარტამენტი": "bg-light-orange",
+};
+
 function TaskCard({ task }) {
   return (
     <Link
@@ -25,12 +36,16 @@ function TaskCard({ task }) {
 }
 
 function Header({ priority, department, date }) {
+  const departmentColorClass = departmentColors[department] || "bg-light-pink";
+
   return (
     <div className="flex items-center justify-between gap-2.5">
       <div className="flex items-center gap-2.5">
         <PriorityBadge className="text-xs" priority={priority} />
 
-        <span className="bg-light-pink grid h-6 place-content-center rounded-full text-xs text-white">
+        <span
+          className={`${departmentColorClass} h-6 w-22 truncate rounded-full px-2 py-1.5 text-xs leading-[1em] text-white`}
+        >
           {department}
         </span>
       </div>
@@ -45,7 +60,7 @@ function Info({ name, description }) {
     <div className="px-[0.65625rem]">
       <p className="mb-3 truncate text-[0.9375rem] font-medium">{name}</p>
       <p
-        className={`line-clamp-2 text-sm ${description ? "text-gray" : "text-very-light-gray"}`}
+        className={`line-clamp-2 min-h-[calc(1.2em*2)] text-sm leading-[1.2em] ${description ? "text-gray" : "text-very-light-gray"}`}
       >
         {description || "აღწერა არ არის..."}
       </p>
