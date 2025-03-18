@@ -28,20 +28,28 @@ export function getTomorrowDate() {
   return tomorrow.toISOString().split("T")[0];
 }
 
-export function saveToSessionStorage(key, data) {
+export function saveToLocalStorage(key, data) {
   try {
-    sessionStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem(key, JSON.stringify(data));
   } catch (error) {
-    console.error("Error saving to sessionStorage:", error);
+    console.error(`Error saving ${key} to localStorage: `, error);
   }
 }
 
-export function getFromSessionStorage(key, defaultValue) {
+export function getFromLocalStorage(key, defaultValue) {
   try {
-    const storedValue = sessionStorage.getItem(key);
-    return storedValue ? JSON.parse(storedValue) : defaultValue;
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
   } catch (error) {
-    console.error("Error loading from sessionStorage:", error);
+    console.error(`Error retrieving ${key} from localStorage: `, error);
     return defaultValue;
+  }
+}
+
+export function removeFromLocalStorage(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch (error) {
+    console.error(`Error removing ${key} from localStorage:`, error);
   }
 }
