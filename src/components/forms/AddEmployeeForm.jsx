@@ -191,7 +191,7 @@ function AddEmployeeForm({ setIsModalOpen }) {
       onSubmit={handleSubmit}
     >
       <Input
-        className={`mb-1.5 ${
+        className={`mb-1 ${
           !formData.name
             ? isSubmitAttempted
               ? "border-red"
@@ -251,7 +251,7 @@ function AddEmployeeForm({ setIsModalOpen }) {
       />
 
       <Input
-        className={`mb-1.5 ${
+        className={`mb-1 ${
           !formData.surname
             ? isSubmitAttempted
               ? "border-red"
@@ -320,7 +320,7 @@ function AddEmployeeForm({ setIsModalOpen }) {
               : errors.avatar.size || errors.avatar.type
                 ? "border-red"
                 : "border-green"
-          } col-span-full mb-1.5 flex h-30 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed`}
+          } col-span-full mb-1 flex h-30 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed`}
         >
           {imagePreview ? (
             <div className="relative">
