@@ -2,10 +2,13 @@ function Input({
   parentClassName,
   className,
   type = "text",
+  min,
   label,
   name,
   requirement,
-  ...props
+  disabled,
+  value,
+  onChange,
 }) {
   return (
     <div className={`flex flex-col ${parentClassName}`}>
@@ -14,12 +17,15 @@ function Input({
       </label>
 
       <input
-        className={`h-11.5 rounded-md border bg-white px-3.5 focus:outline-0 ${className}`}
-        type={type}
+        className={`h-11.5 rounded-md border bg-white px-3.5 focus:outline-0 disabled:cursor-not-allowed ${className}`}
         autoComplete="off"
+        type={type}
+        min={min}
+        disabled={disabled}
         name={name}
         id={name}
-        {...props}
+        value={value}
+        onChange={onChange}
       />
 
       {requirement}
