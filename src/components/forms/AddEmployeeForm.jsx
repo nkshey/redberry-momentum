@@ -52,9 +52,9 @@ function AddEmployeeForm({ setIsModalOpen }) {
           ...prevErrors,
           name: {
             ...prevErrors.name,
-            minLength: value.length < 2,
+            minLength: value.replace(/\s/g, "").length < 2,
             maxLength: value.length > 255,
-            characters: !nameRegex.test(value),
+            characters: !nameRegex.test(value) || !value.trim(),
           },
         }));
         break;
@@ -64,9 +64,9 @@ function AddEmployeeForm({ setIsModalOpen }) {
           ...prevErrors,
           surname: {
             ...prevErrors.surname,
-            minLength: value.length < 2,
+            minLength: value.replace(/\s/g, "").length < 2,
             maxLength: value.length > 255,
-            characters: !nameRegex.test(value),
+            characters: !nameRegex.test(value) || !value.trim(),
           },
         }));
         break;
@@ -139,13 +139,14 @@ function AddEmployeeForm({ setIsModalOpen }) {
       ...prevErrors,
       name: {
         ...prevErrors.name,
-        minLength: isNameEmpty || formData.name.length < 2,
+        minLength: isNameEmpty || formData.name.replace(/\s/g, "").length < 2,
         maxLength: formData.name.length > 255,
         characters: isNameEmpty || !nameRegex.test(formData.name),
       },
       surname: {
         ...prevErrors.surname,
-        minLength: isSurnameEmpty || formData.surname.length < 2,
+        minLength:
+          isSurnameEmpty || formData.surname.replace(/\s/g, "").length < 2,
         maxLength: formData.surname.length > 255,
         characters: isSurnameEmpty || !nameRegex.test(formData.surname),
       },
