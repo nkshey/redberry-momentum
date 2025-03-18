@@ -1,11 +1,14 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useDepartments } from "../../api/useApis";
-import TrashIcon from "../../ui/icons/TrashIcon";
+import { addEmployee } from "../../api/fetchers";
+
 import Input from "../../ui/inputs/Input";
 import Dropdown from "../../ui/inputs/Dropdown";
-import SecondaryButton from "../../ui/buttons/SecondaryButton";
+import ImageUpload from "../../ui/inputs/ImageUpload";
 import PrimaryButton from "../../ui/buttons/PrimaryButton";
-import { addEmployee } from "../../api/fetchers";
+import SecondaryButton from "../../ui/buttons/SecondaryButton";
+import LoadingOverlay from "../../ui/feedback/LoadingOverlay";
+import ValidationRequirement from "../../ui/validation/ValidationRequirement";
 
 const initialFormData = {
   name: "",
@@ -35,13 +38,13 @@ const initialFormErrors = {
 const MAX_FILE_SIZE = 600 * 1024;
 const nameRegex = /^[a-zA-Zა-ჰ\s]*$/;
 
-function AddEmployeeForm({ setIsModalOpen }) {
+function AddEmployeeForm({ setIsModalOpen, onSuccess }) {
   const { data: departments } = useDepartments();
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState(initialFormErrors);
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitAttempted, setIsSubmitAttempted] = useState(false);
-  const fileInputRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -105,10 +108,6 @@ function AddEmployeeForm({ setIsModalOpen }) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-
     setFormData((prevData) => ({ ...prevData, avatar: "" }));
 
     setImagePreview(null);
@@ -123,8 +122,9 @@ function AddEmployeeForm({ setIsModalOpen }) {
     }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    e.stopPropagation();
 
     setIsSubmitAttempted(true);
 
@@ -177,10 +177,19 @@ function AddEmployeeForm({ setIsModalOpen }) {
     ) {
       return;
     } else {
-      setErrors(initialFormErrors);
-      setFormData(initialFormData);
-      addEmployee(formData);
-      setIsModalOpen(false);
+      try {
+        setIsSubmitting(true);
+        await addEmployee(formData);
+        setIsModalOpen(false);
+
+        if (onSuccess) {
+          onSuccess();
+        }
+      } catch (error) {
+        console.error("Failed to add employee: ", error);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   }
 
@@ -190,6 +199,13 @@ function AddEmployeeForm({ setIsModalOpen }) {
       noValidate
       onSubmit={handleSubmit}
     >
+      {isSubmitting && (
+        <LoadingOverlay
+          parentClassName="rounded-[0.625rem]"
+          message="თანამშრომელი იქმნება..."
+        />
+      )}
+
       <Input
         className={`mb-1 ${
           !formData.name
@@ -204,49 +220,35 @@ function AddEmployeeForm({ setIsModalOpen }) {
         }`}
         requirement={
           <div className="flex flex-col gap-0.5 text-[0.625rem] leading-[1em]">
-            <span
-              className={
-                !formData.name
-                  ? isSubmitAttempted
-                    ? "text-red"
-                    : "text-light-gray"
-                  : errors.name.minLength
-                    ? "text-red"
-                    : "text-green"
-              }
+            <ValidationRequirement
+              showField={formData.name}
+              isSubmitAttempted={isSubmitAttempted}
+              hasError={errors.name.minLength}
             >
               მინიმუმ 2 სიმბოლო
-            </span>
-            <span
-              className={
-                !formData.name
-                  ? isSubmitAttempted
-                    ? "text-green"
-                    : "text-light-gray"
-                  : errors.name.maxLength
-                    ? "text-red"
-                    : "text-green"
-              }
+            </ValidationRequirement>
+
+            <ValidationRequirement
+              showField={formData.name}
+              isSubmitAttempted={isSubmitAttempted}
+              hasError={errors.name.maxLength}
             >
               მაქსიმუმ 255 სიმბოლო
-            </span>
-            <span
-              className={
-                !formData.name
-                  ? isSubmitAttempted
-                    ? "text-red"
-                    : "text-light-gray"
-                  : errors.name.characters
-                    ? "text-red"
-                    : "text-green"
-              }
+            </ValidationRequirement>
+
+            <ValidationRequirement
+              showField={formData.name}
+              isSubmitAttempted={isSubmitAttempted}
+              hasError={errors.name.characters}
             >
               მხოლოდ ლათინური და ქართული სიმბოლოები
-            </span>
+            </ValidationRequirement>
           </div>
         }
         label="სახელი*"
         name="name"
+        disabled={isSubmitting}
+        value={formData.name}
         onChange={handleChange}
       />
 
@@ -264,120 +266,47 @@ function AddEmployeeForm({ setIsModalOpen }) {
         }`}
         requirement={
           <div className="flex flex-col gap-0.5 text-[0.625rem] leading-[1em]">
-            <span
-              className={
-                !formData.surname
-                  ? isSubmitAttempted
-                    ? "text-red"
-                    : "text-light-gray"
-                  : errors.surname.minLength
-                    ? "text-red"
-                    : "text-green"
-              }
+            <ValidationRequirement
+              showField={formData.surname}
+              isSubmitAttempted={isSubmitAttempted}
+              hasError={errors.surname.minLength}
             >
               მინიმუმ 2 სიმბოლო
-            </span>
-            <span
-              className={
-                !formData.surname
-                  ? isSubmitAttempted
-                    ? "text-green"
-                    : "text-light-gray"
-                  : errors.surname.maxLength
-                    ? "text-red"
-                    : "text-green"
-              }
+            </ValidationRequirement>
+
+            <ValidationRequirement
+              showField={formData.surname}
+              isSubmitAttempted={isSubmitAttempted}
+              hasError={errors.surname.maxLength}
             >
               მაქსიმუმ 255 სიმბოლო
-            </span>
-            <span
-              className={
-                !formData.surname
-                  ? isSubmitAttempted
-                    ? "text-red"
-                    : "text-light-gray"
-                  : errors.surname.characters
-                    ? "text-red"
-                    : "text-green"
-              }
+            </ValidationRequirement>
+
+            <ValidationRequirement
+              showField={formData.surname}
+              isSubmitAttempted={isSubmitAttempted}
+              hasError={errors.surname.characters}
             >
               მხოლოდ ლათინური და ქართული სიმბოლოები
-            </span>
+            </ValidationRequirement>
           </div>
         }
         label="გვარი*"
         name="surname"
+        disabled={isSubmitting}
+        value={formData.surname}
         onChange={handleChange}
       />
 
-      <div className="col-span-full">
-        <label
-          className={`${
-            !formData.avatar
-              ? isSubmitAttempted
-                ? "border-red"
-                : "border-very-light-gray"
-              : errors.avatar.size || errors.avatar.type
-                ? "border-red"
-                : "border-green"
-          } col-span-full mb-1 flex h-30 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed`}
-        >
-          {imagePreview ? (
-            <div className="relative">
-              <img
-                className="size-22 rounded-full object-cover"
-                src={imagePreview}
-              />
-
-              <div
-                className="border-light-gray group absolute right-0 bottom-0 grid size-6 place-content-center rounded-full border bg-white transition-all hover:brightness-80"
-                onClick={handleRemoveFile}
-              >
-                <TrashIcon />
-              </div>
-            </div>
-          ) : (
-            <p>აირჩიეთ ფოტო</p>
-          )}
-
-          <input
-            className="hidden"
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-          />
-        </label>
-
-        <div className="flex flex-col gap-0.5 text-[0.625rem] leading-[1em]">
-          <span
-            className={` ${
-              !formData.avatar
-                ? isSubmitAttempted
-                  ? "text-red"
-                  : "text-light-gray"
-                : errors.avatar.size
-                  ? "text-red"
-                  : "text-green"
-            }`}
-          >
-            მაქსიმუმ 600kb
-          </span>
-          <span
-            className={` ${
-              !formData.avatar
-                ? isSubmitAttempted
-                  ? "text-red"
-                  : "text-light-gray"
-                : errors.avatar.type
-                  ? "text-red"
-                  : "text-green"
-            }`}
-          >
-            სურათის ტიპი
-          </span>
-        </div>
-      </div>
+      <ImageUpload
+        value={formData.avatar}
+        imagePreview={imagePreview}
+        onChange={handleFileChange}
+        onRemove={handleRemoveFile}
+        isSubmitAttempted={isSubmitAttempted}
+        errors={errors.avatar}
+        disabled={isSubmitting}
+      />
 
       <Dropdown
         className={
@@ -389,6 +318,7 @@ function AddEmployeeForm({ setIsModalOpen }) {
         }
         label="დეპარტამენტი*"
         data={departments}
+        disabled={isSubmitting}
         value={formData.department_id}
         onChange={(id) =>
           setFormData((prevData) => ({ ...prevData, department_id: id }))
@@ -399,14 +329,17 @@ function AddEmployeeForm({ setIsModalOpen }) {
         <SecondaryButton
           className="grid h-10.5 place-content-center !px-4"
           onClick={() => setIsModalOpen(false)}
+          disabled={isSubmitting}
         >
           გაუქმება
         </SecondaryButton>
+
         <PrimaryButton
           className="grid h-10.5 w-full place-content-center !px-4.5 text-lg"
           type="submit"
+          disabled={isSubmitting}
         >
-          დაამატე თანამშრომელი
+          {isSubmitting ? "იქმნება..." : "დაამატე თანამშრომელი"}
         </PrimaryButton>
       </div>
     </form>
