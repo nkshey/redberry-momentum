@@ -1,21 +1,31 @@
-import Input from "../../ui/inputs/Input";
-import TextArea from "../../ui/inputs/TextArea";
-import Dropdown from "../../ui/inputs/Dropdown";
-import PrimaryButton from "../../ui/buttons/PrimaryButton";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { addTask } from "../../api/fetchers";
 import {
   useDepartments,
   useEmployees,
   usePriorities,
   useStatuses,
 } from "../../api/useApis";
-import { useState, useEffect, useRef } from "react";
 import {
-  getFromSessionStorage,
+  getFromLocalStorage,
   getTomorrowDate,
-  saveToSessionStorage,
+  removeFromLocalStorage,
+  saveToLocalStorage,
 } from "../../utils/helpers";
-import { addTask } from "../../api/fetchers";
-import { useNavigate } from "react-router-dom";
+
+import Input from "../../ui/inputs/Input";
+import TextArea from "../../ui/inputs/TextArea";
+import Dropdown from "../../ui/inputs/Dropdown";
+import PrimaryButton from "../../ui/buttons/PrimaryButton";
+import LoadingOverlay from "../../ui/feedback/LoadingOverlay";
+import AddEmployeeModal from "../../components/AddEmployeeModal";
+
+const STORAGE_KEYS = {
+  FORM_DATA: "task_form_data",
+  SELECTED_DEPARTMENT: "task_form_department",
+  ERRORS: "task_form_errors",
+};
 
 const initialFormData = {
   name: "",
@@ -26,266 +36,174 @@ const initialFormData = {
   employee_id: null,
 };
 
-const STORAGE_KEY = "task_form_data";
-const DEPARTMENT_KEY = "task_form_department";
+const initialFormErrors = {
+  name: {
+    minLength: false,
+    maxLength: false,
+  },
+  description: {
+    minWords: false,
+    maxLength: false,
+  },
+};
 
 function AddTaskForm() {
   const navigate = useNavigate();
 
-  // Initial form state with the exact structure needed for backend
   const [formData, setFormData] = useState(() =>
-    getFromSessionStorage(STORAGE_KEY, initialFormData),
+    getFromLocalStorage(STORAGE_KEYS.FORM_DATA, initialFormData),
   );
-
-  // Track UI state (not sent to backend)
-  const [selectedDepartmentId, setSelectedDepartmentId] = useState(() =>
-    getFromSessionStorage(DEPARTMENT_KEY, null),
+  const [errors, setErrors] = useState(() =>
+    getFromLocalStorage(STORAGE_KEYS.ERRORS, initialFormErrors),
   );
-
-  // Track validation state
-  const [errors, setErrors] = useState({});
-  const [touchedFields, setTouchedFields] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState(() =>
+    getFromLocalStorage(STORAGE_KEYS.SELECTED_DEPARTMENT, null),
+  );
+  const [isSubmitAttempted, setIsSubmitAttempted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // API data loading hooks
   const { data: priorities, isLoading: prioritiesLoading } = usePriorities();
   const { data: statuses, isLoading: statusesLoading } = useStatuses();
   const { data: departments, isLoading: departmentsLoading } = useDepartments();
-  const { data: employees, isLoading: employeesLoading } = useEmployees();
+  const {
+    data: employees,
+    isLoading: employeesLoading,
+    refetch: refetchEmployees,
+  } = useEmployees();
 
-  // Save form data to sessionStorage whenever it changes
+  const filteredEmployees = employees?.filter(
+    (employee) => employee.department.id === selectedDepartment,
+  );
+
+  // useEffects to save state changes
   useEffect(() => {
-    saveToSessionStorage(STORAGE_KEY, formData);
+    saveToLocalStorage(STORAGE_KEYS.FORM_DATA, formData);
   }, [formData]);
 
-  // Save department ID to sessionStorage whenever it changes
   useEffect(() => {
-    saveToSessionStorage(DEPARTMENT_KEY, selectedDepartmentId);
-  }, [selectedDepartmentId]);
+    saveToLocalStorage(STORAGE_KEYS.ERRORS, errors);
+  }, [errors]);
 
-  // Track department changes with a ref
-  const prevDepartmentIdRef = useRef(selectedDepartmentId);
-
-  // Reset employee only when department actually changes
   useEffect(() => {
-    // Only reset employee if department changed to a different value
+    saveToLocalStorage(STORAGE_KEYS.SELECTED_DEPARTMENT, selectedDepartment);
+  }, [selectedDepartment]);
+
+  // This code tracks department changes and resets employee selection when department changes
+  // Store the previous department to detect changes
+  const prevDepartmentRef = useRef(null);
+  // Reset employee_id when department changes
+  useEffect(() => {
+    // Only run logic after initial render
     if (
-      selectedDepartmentId &&
-      selectedDepartmentId !== prevDepartmentIdRef.current
+      prevDepartmentRef.current !== null &&
+      prevDepartmentRef.current !== selectedDepartment
     ) {
-      setFormData((prev) => ({ ...prev, employee_id: null }));
-      prevDepartmentIdRef.current = selectedDepartmentId;
+      // Reset employee_id when department changes
+      setFormData((prevData) => ({ ...prevData, employee_id: null }));
     }
-  }, [selectedDepartmentId]);
+    // Always update reference to current department
+    prevDepartmentRef.current = selectedDepartment;
+  }, [selectedDepartment]);
 
-  // Filter employees by department
-  const filteredEmployees =
-    employees?.filter(
-      (employee) => employee.department.id === selectedDepartmentId,
-    ) || [];
+  function handleChange(e) {
+    const { name, value } = e.target;
 
-  const validateField = (field, value) => {
-    let newErrors = { ...errors };
-    delete newErrors[field];
-
-    switch (field) {
-      case "name": {
-        // Trim value to remove leading/trailing spaces
-        const trimmedName = value ? value.trim() : "";
-        // Replace multiple spaces with single spaces for accurate character count
-        const normalizedName = trimmedName.replace(/\s+/g, " ");
-
-        if (!trimmedName) {
-          newErrors[field] = true;
-        } else if (normalizedName.length < 3) {
-          newErrors[field] = true;
-        } else if (normalizedName.length > 255) {
-          newErrors[field] = true;
-        }
+    switch (name) {
+      case "name":
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          name: {
+            ...prevErrors.name,
+            minLength: value.replace(/\s/g, "").length < 3,
+            maxLength: value.length > 255,
+          },
+        }));
         break;
-      }
 
       case "description":
-        if (value) {
-          // First trim to remove leading/trailing spaces
-          const trimmedDesc = value.trim();
-          // Then normalize multiple spaces to single spaces
-          const normalizedDesc = trimmedDesc.replace(/\s+/g, " ");
-
-          // Count words more accurately by splitting on spaces and filtering empty entries
-          const wordCount = normalizedDesc
-            .split(" ")
-            .filter((word) => word.length > 0).length;
-
-          if (wordCount < 4) {
-            newErrors[field] = true;
-          } else if (normalizedDesc.length > 255) {
-            newErrors[field] = true;
-          }
-        }
-        break;
-
-      case "due_date":
-        if (!value) {
-          newErrors[field] = true;
-        } else {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-
-          const selectedDate = new Date(value);
-          selectedDate.setHours(0, 0, 0, 0);
-
-          if (selectedDate < today) {
-            newErrors[field] = true;
-          }
-        }
-        break;
-
-      case "employee_id":
-        if (selectedDepartmentId && !value) {
-          newErrors[field] = true;
-        }
-        break;
-
-      default:
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          description: {
+            ...prevErrors.description,
+            minWords: value.trim().split(/\s+/).filter(Boolean).length < 4,
+            maxLength: value.length > 255,
+          },
+        }));
         break;
     }
 
-    setErrors(newErrors);
-    return !newErrors[field]; // Return true if field is valid
-  };
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  }
 
-  // Handle form field changes
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    setTouchedFields((prev) => ({ ...prev, [field]: true }));
-    validateField(field, value);
-  };
+  function handleDropdown(name, value) {
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    saveToLocalStorage(STORAGE_KEYS.FORM_DATA, updatedFormData);
+  }
 
-  // Mark a field as touched
-  const handleBlur = (field) => {
-    setTouchedFields((prev) => ({ ...prev, [field]: true }));
-    validateField(field, formData[field]);
-  };
+  async function handleSubmit(e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-  // Validate a single field
+    setIsSubmitAttempted(true);
 
-  // Validate all fields at once
-  const validateForm = () => {
-    const newErrors = {};
+    // Check if required fields are empty
+    const isNameEmpty = !formData.name.trim();
+    const isEmployeeEmpty = !formData.employee_id;
+    const isDepartmentEmpty = !selectedDepartment;
 
-    // Validate name with improved space handling
-    const trimmedName = formData.name ? formData.name.trim() : "";
-    const normalizedName = trimmedName.replace(/\s+/g, " ");
+    const isDescriptionNotEmpty = formData.description.trim();
 
-    if (!trimmedName) newErrors.name = true;
-    else if (normalizedName.length < 3) newErrors.name = true;
-    else if (normalizedName.length > 255) newErrors.name = true;
+    const hasDescriptionErrors =
+      isDescriptionNotEmpty &&
+      (formData.description.trim().split(/\s+/).filter(Boolean).length < 4 ||
+        formData.description.length > 255);
 
-    // Validate description if provided with improved space handling
-    if (formData.description) {
-      const trimmedDesc = formData.description.trim();
-      const normalizedDesc = trimmedDesc.replace(/\s+/g, " ");
+    const hasNameErrors = errors.name.minLength || errors.name.maxLength;
 
-      const wordCount = normalizedDesc
-        .split(" ")
-        .filter((word) => word.length > 0).length;
+    // Update errors state with required field validations
+    setErrors({
+      name: {
+        minLength: isNameEmpty || formData.name.replace(/\s/g, "").length < 3,
+        maxLength: formData.name.length > 255,
+      },
+      description: {
+        minWords:
+          isDescriptionNotEmpty &&
+          formData.description.trim().split(/\s+/).filter(Boolean).length < 4,
+        maxLength: formData.description.length > 255,
+      },
+    });
 
-      if (wordCount < 4) newErrors.description = true;
-      else if (normalizedDesc.length > 255) newErrors.description = true;
-    }
-
-    // Validate due date
-    if (!formData.due_date) {
-      newErrors.due_date = true;
+    if (
+      isNameEmpty ||
+      isDepartmentEmpty ||
+      isEmployeeEmpty ||
+      hasNameErrors ||
+      hasDescriptionErrors
+    ) {
+      return;
     } else {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      try {
+        setIsSubmitting(true);
+        await addTask(formData);
 
-      const selectedDate = new Date(formData.due_date);
-      selectedDate.setHours(0, 0, 0, 0);
+        // Clear all stored form data
+        removeFromLocalStorage(STORAGE_KEYS.FORM_DATA);
+        removeFromLocalStorage(STORAGE_KEYS.ERRORS);
+        removeFromLocalStorage(STORAGE_KEYS.SELECTED_DEPARTMENT);
 
-      if (selectedDate < today) {
-        newErrors.due_date = true;
+        navigate("/");
+      } catch (error) {
+        console.error("Failed to add task: ", error);
+      } finally {
+        setIsSubmitting(false);
       }
     }
+  }
 
-    // Department is required but not in the form data we send
-    if (!selectedDepartmentId) {
-      newErrors.department_id = true;
-    }
-
-    // Validate employee if department is selected
-    if (selectedDepartmentId && !formData.employee_id) {
-      newErrors.employee_id = true;
-    }
-
-    // Validate priority
-    if (!formData.priority_id) {
-      newErrors.priority_id = true;
-    }
-
-    // Validate status
-    if (!formData.status_id) {
-      newErrors.status_id = true;
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-
-    // Mark all fields as touched, including dropdowns
-    const allTouched = {
-      name: true,
-      description: true,
-      due_date: true,
-      priority_id: true,
-      status_id: true,
-      employee_id: true,
-      department_id: true,
-    };
-
-    setTouchedFields(allTouched);
-
-    // Validate all fields
-    const isValid = validateForm();
-
-    if (isValid) {
-      addTask(formData);
-      sessionStorage.removeItem(STORAGE_KEY);
-      sessionStorage.removeItem(DEPARTMENT_KEY);
-      setFormData(initialFormData);
-      navigate("/");
-    }
-  };
-
-  // Helper for determining field validation styling
-  const getFieldStyle = (field) => {
-    const isTouched = touchedFields[field] || isSubmitted;
-    const hasError = errors[field];
-
-    if (!isTouched) return "border-very-light-gray";
-    return hasError ? "border-red" : "border-green";
-  };
-
-  const getRequirementStyle = (field) => {
-    if (!touchedFields[field] && !isSubmitted) return "text-light-gray";
-    return errors[field] ? "text-red" : "text-green";
-  };
-
-  const getDropdownStyle = (field, value) => {
-    const isTouched = touchedFields[field] || isSubmitted;
-
-    if (!isTouched) return "";
-    return value ? "!border-green" : "!border-red";
-  };
-
-  // Loading state
   if (
     prioritiesLoading ||
     statusesLoading ||
@@ -296,66 +214,139 @@ function AddTaskForm() {
 
   return (
     <form
-      className="bg-very-light-purple/65 grid place-content-center gap-15.5 rounded-sm border border-[#DDD2FF] px-20 py-36.5"
+      className="bg-very-light-purple/65 relative grid place-content-center gap-15.5 rounded-sm border border-[#DDD2FF] px-20 py-36.5"
       noValidate
       onSubmit={handleSubmit}
     >
+      {isSubmitting && <LoadingOverlay message="დავალება იქმნება..." />}
+
       <div className="grid grid-cols-[repeat(2,minmax(auto,34.375rem))] gap-40">
         <div>
           <Input
-            className={`mb-1 ${getFieldStyle("name")}`}
+            className={`mb-1 ${
+              !formData.name
+                ? isSubmitAttempted
+                  ? "border-red"
+                  : "border-very-light-gray"
+                : errors.name.minLength || errors.name.maxLength
+                  ? "border-red"
+                  : "border-green"
+            }`}
             requirement={
               <div
-                className={`flex flex-col gap-0.5 text-[0.625rem] leading-[1em] ${getRequirementStyle("name")}`}
+                className={`flex flex-col gap-0.5 text-[0.625rem] leading-[1em]`}
               >
-                <span>მინიმუმ 3 სიმბოლო</span>
-                <span>მაქსიმუმ 255 სიმბოლო</span>
+                <span
+                  className={
+                    !formData.name
+                      ? isSubmitAttempted
+                        ? "text-red"
+                        : "text-light-gray"
+                      : errors.name.minLength
+                        ? "text-red"
+                        : "text-green"
+                  }
+                >
+                  მინიმუმ 3 სიმბოლო
+                </span>
+                <span
+                  className={
+                    !formData.name
+                      ? isSubmitAttempted
+                        ? "text-red"
+                        : "text-light-gray"
+                      : errors.name.maxLength
+                        ? "text-red"
+                        : "text-green"
+                  }
+                >
+                  მაქსიმუმ 255 სიმბოლო
+                </span>
               </div>
             }
             label="სათაური*"
+            name="name"
+            disabled={isSubmitting}
             value={formData.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-            onBlur={() => handleBlur("name")}
+            onChange={handleChange}
           />
         </div>
 
         <Dropdown
-          className={`w-full ${getDropdownStyle("department_id", selectedDepartmentId)}`}
-          selected={"აირჩიე"}
-          data={departments}
+          className={
+            !selectedDepartment && isSubmitAttempted
+              ? "!border-red"
+              : selectedDepartment && "!border-green"
+          }
           label="დეპარტამენტი*"
-          value={selectedDepartmentId}
-          onChange={(newValue) => {
-            setSelectedDepartmentId(newValue);
-            setTouchedFields((prev) => ({ ...prev, department_id: true }));
-          }}
+          disabled={isSubmitting}
+          data={departments}
+          value={selectedDepartment}
+          onChange={(id) => setSelectedDepartment(id)}
         />
       </div>
 
       <div className="grid grid-cols-[repeat(2,minmax(auto,34.375rem))] gap-40">
         <TextArea
-          className={`mb-1 rounded-md p-3.5 ${getFieldStyle("description")}`}
-          label="აღწერა"
+          className={`mb-1 rounded-md p-3.5 ${
+            !formData.description.trim()
+              ? isSubmitAttempted
+                ? "border-green"
+                : "border-very-light-gray"
+              : errors.description.minWords || errors.description.maxLength
+                ? "border-red"
+                : "border-green"
+          }`}
           requirement={
-            <div
-              className={`flex flex-col gap-0.5 text-[0.625rem] leading-[1em] ${getRequirementStyle("description")}`}
-            >
-              <span>მინიმუმ 4 სიტყვა</span>
-              <span>მაქსიმუმ 255 სიმბოლო</span>
+            <div className="flex flex-col gap-0.5 text-[0.625rem] leading-[1em]">
+              <span
+                className={
+                  !formData.description.trim()
+                    ? isSubmitAttempted
+                      ? "text-green"
+                      : "text-light-gray"
+                    : errors.description.minWords
+                      ? "text-red"
+                      : "text-green"
+                }
+              >
+                მინიმუმ 4 სიტყვა
+              </span>
+              <span
+                className={
+                  !formData.description.trim()
+                    ? isSubmitAttempted
+                      ? "text-green"
+                      : "text-light-gray"
+                    : errors.description.maxLength
+                      ? "text-red"
+                      : "text-green"
+                }
+              >
+                მაქსიმუმ 255 სიმბოლო
+              </span>
             </div>
           }
+          label="აღწერა"
+          name="description"
+          disabled={isSubmitting}
           value={formData.description}
-          onChange={(e) => handleChange("description", e.target.value)}
-          onBlur={() => handleBlur("description")}
+          onChange={handleChange}
         />
 
-        {selectedDepartmentId && (
+        {selectedDepartment && (
           <Dropdown
-            className={`w-full ${getDropdownStyle("employee_id", formData.employee_id)}`}
-            data={filteredEmployees}
+            className={
+              !formData.employee_id && isSubmitAttempted
+                ? "!border-red"
+                : formData.employee_id && "!border-green"
+            }
             label="პასუხისმგებელი თანამშრომელი*"
+            isEmployee={true}
+            data={filteredEmployees}
             value={formData.employee_id}
-            onChange={(newValue) => handleChange("employee_id", newValue)}
+            onChange={(id) => handleDropdown("employee_id", id)}
+            onAddEmployee={() => setIsModalOpen(true)}
           />
         )}
       </div>
@@ -363,35 +354,62 @@ function AddTaskForm() {
       <div className="grid grid-cols-[repeat(2,minmax(auto,34.375rem))] gap-40">
         <div className="grid grid-cols-2 gap-8">
           <Dropdown
-            className={`w-full ${getDropdownStyle("priority_id", formData.priority_id)}`}
-            data={priorities}
+            className={
+              !formData.priority_id && isSubmitAttempted
+                ? "!border-red"
+                : isSubmitAttempted && "!border-green"
+            }
             label="პრიორიტეტი*"
+            data={priorities}
+            disabled={isSubmitting}
             value={formData.priority_id}
-            onChange={(newValue) => handleChange("priority_id", newValue)}
+            onChange={(id) => handleDropdown("priority_id", id)}
           />
 
           <Dropdown
-            className={`w-full ${getDropdownStyle("status_id", formData.status_id)}`}
-            data={statuses}
+            className={
+              !formData.status_id && isSubmitAttempted
+                ? "!border-red"
+                : isSubmitAttempted && "!border-green"
+            }
             label="სტატუსი*"
+            data={statuses}
+            disabled={isSubmitting}
             value={formData.status_id}
-            onChange={(newValue) => handleChange("status_id", newValue)}
+            onChange={(id) => handleDropdown("status_id", id)}
           />
         </div>
 
         <Input
-          className={`w-[58%] ${getFieldStyle("due_date")}`}
+          className={`border-very-light-gray w-[58%] ${
+            !formData.due_date && isSubmitAttempted
+              ? "!border-red"
+              : isSubmitAttempted && "!border-green"
+          }`}
           type="date"
+          min={new Date().toISOString().split("T")[0]}
           label="დედლაინი*"
+          name="due_date"
+          disabled={isSubmitting}
           value={formData.due_date}
-          onChange={(e) => handleChange("due_date", e.target.value)}
-          onBlur={() => handleBlur("due_date")}
+          onChange={handleChange}
         />
       </div>
 
-      <PrimaryButton className="mt-21 h-10.5 place-self-end text-lg">
-        დავალების შექმნა
+      <PrimaryButton
+        className="mt-21 h-10.5 place-self-end text-lg"
+        type="submit"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "იქმნება..." : "დავალების შექმნა"}
       </PrimaryButton>
+
+      {isModalOpen && (
+        <AddEmployeeModal
+          setIsModalOpen={setIsModalOpen}
+          onSuccess={refetchEmployees}
+        />
+      )}
     </form>
   );
 }
