@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useSpecificTask } from "../api/useApis";
 
+import Loader from "../ui/feedback/Loader";
 import TaskPageHeader from "../components/pages/taskpage/TaskPageHeader";
 import TaskPageTaskDetails from "../components/pages/taskpage/TaskPageTaskDetails";
 import CommentsSection from "../components/pages/taskpage/comments/CommentsSection";
@@ -10,7 +11,7 @@ function TaskPage() {
   const { id } = useParams();
   const { data: task, isLoading: taskLoading, isError } = useSpecificTask(id);
 
-  if (taskLoading) return <div>იტვირთება...</div>;
+  if (taskLoading) return <Loader className="h-[calc(100dvh-13rem)]" />;
 
   if (isError || !task) {
     return <NotFoundPage />;

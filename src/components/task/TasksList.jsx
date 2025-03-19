@@ -1,6 +1,7 @@
 import { useStatuses } from "../../api/useApis";
 import useFilteredTasks from "../../hooks/useFilteredTasks";
 
+import Loader from "../../ui/feedback/Loader";
 import TaskCard from "./TaskCard";
 import TaskStatus from "./TaskStatus";
 
@@ -8,7 +9,7 @@ function TasksList() {
   const { data: statuses, isLoading: statusesLoading } = useStatuses();
   const { filteredTasks, isLoading: tasksLoading } = useFilteredTasks();
 
-  if (statusesLoading || tasksLoading) return <div>იტვირთება...</div>;
+  if (statusesLoading || tasksLoading) return <Loader />;
 
   return (
     <section className="grid grid-cols-4 gap-13 pb-7.5">
@@ -22,7 +23,7 @@ function TasksList() {
             <TaskStatus name={status.name} />
 
             <ul className="flex flex-col gap-7.5">
-              {tasksForStatus.length > 0 &&
+              {tasksForStatus?.length > 0 &&
                 tasksForStatus.map((task) => (
                   <TaskCard key={task.id} task={task} />
                 ))}
@@ -31,7 +32,7 @@ function TasksList() {
         );
       })}
 
-      {filteredTasks.length === 0 && (
+      {filteredTasks?.length === 0 && (
         <p className="col-span-full place-self-center">
           დავალებები არ მოიძებნა
         </p>

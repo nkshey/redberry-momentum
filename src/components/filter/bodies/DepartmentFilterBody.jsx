@@ -1,6 +1,7 @@
 import { useDepartments } from "../../../api/useApis";
 import { useFilterInit } from "../../../hooks/useFilterInit";
 import useFilterStore, { FILTER_TYPES } from "../../../stores/useFilterStore";
+import Loader from "../../../ui/feedback/Loader";
 import CheckBox from "../../../ui/inputs/CheckBox";
 
 function DepartmentFilterBody() {
@@ -9,7 +10,7 @@ function DepartmentFilterBody() {
 
   useFilterInit(FILTER_TYPES.DEPARTMENTS);
 
-  if (isLoading) return <div>იტვირთება...</div>;
+  if (isLoading) return <Loader />;
 
   return (
     <ul className="grid max-h-38.5 gap-5.5 overflow-y-auto overscroll-none">
