@@ -13,6 +13,8 @@ function EmployeeFilterBody() {
 
   return (
     <ul className="grid max-h-44.5 gap-5.5 overflow-y-auto overscroll-none">
+      {employees.length === 0 && <p>თანამშრომელი არ მოიძებნა</p>}
+
       {employees.map((employee) => (
         <li className="leading-[1em] select-none" key={employee.id}>
           <CheckBox
