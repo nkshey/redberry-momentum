@@ -210,7 +210,7 @@ function AddTaskForm() {
     departmentsLoading ||
     employeesLoading
   )
-    return <p>Loading...</p>;
+    return <p>იტვირთება...</p>;
 
   return (
     <form

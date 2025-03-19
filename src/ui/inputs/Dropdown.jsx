@@ -86,7 +86,7 @@ const Dropdown = ({
 
         {/* Dropdown items list */}
         {isOpen && data && (
-          <ul className="border-purple absolute top-full -left-[1px] z-99 w-[calc(100%+2px)] rounded-b-[0.3125rem] border border-t-0 bg-white text-sm font-light">
+          <ul className="border-purple absolute top-full -left-[1px] z-99 max-h-60 w-[calc(100%+2px)] overflow-y-auto overscroll-none rounded-b-[0.3125rem] border border-t-0 bg-white text-sm font-light">
             {isEmployee && (
               <li
                 className="text-purple flex h-11.5 items-center gap-2 px-3.5"

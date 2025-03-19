@@ -9,7 +9,7 @@ function TaskPage() {
   const { id } = useParams();
   const { data: task, isLoading: taskLoading } = useSpecificTask(id);
 
-  if (taskLoading) return <div>Loading...</div>;
+  if (taskLoading) return <div>იტვირთება...</div>;
 
   return (
     <div className="grid grid-cols-[1fr_1.035fr] gap-56">

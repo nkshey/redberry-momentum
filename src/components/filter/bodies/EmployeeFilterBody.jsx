@@ -9,7 +9,7 @@ function EmployeeFilterBody() {
 
   useFilterInit(FILTER_TYPES.EMPLOYEE);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div>იტვირთება...</div>;
 
   return (
     <ul className="grid max-h-44.5 gap-5.5 overflow-y-auto overscroll-none">

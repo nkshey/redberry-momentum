@@ -8,10 +8,10 @@ function TasksList() {
   const { data: statuses, isLoading: statusesLoading } = useStatuses();
   const { filteredTasks, isLoading: tasksLoading } = useFilteredTasks();
 
-  if (statusesLoading || tasksLoading) return <div>Loading...</div>;
+  if (statusesLoading || tasksLoading) return <div>იტვირთება...</div>;
 
   return (
-    <section className="grid grid-cols-4 gap-13">
+    <section className="grid grid-cols-4 gap-13 pb-7.5">
       {statuses?.map((status) => {
         const tasksForStatus = filteredTasks.filter(
           (task) => task.status.name === status.name,

@@ -9,7 +9,7 @@ function PriorityFilterBody() {
 
   useFilterInit(FILTER_TYPES.PRIORITIES);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div>იტვირთება...</div>;
 
   return (
     <ul className="grid max-h-38.5 gap-5.5 overflow-y-auto overscroll-none">
