@@ -46,7 +46,7 @@ function SelectedFilters() {
 
       {hasActiveFilters && (
         <button
-          className="my-[0.4375rem] cursor-pointer text-sm leading-[1em] font-light"
+          className="my-[0.4375rem] cursor-pointer text-sm leading-[1em] font-light transition-colors hover:text-black"
           onClick={clearAllFilters}
         >
           გასუფთავება

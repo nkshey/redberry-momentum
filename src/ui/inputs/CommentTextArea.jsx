@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import PrimaryButton from "../buttons/PrimaryButton";
 import { addCommentToTask } from "../../api/fetchers";
 import { useQueryClient } from "@tanstack/react-query";
+
+import PrimaryButton from "../buttons/PrimaryButton";
 
 function CommentTextArea({
   className,

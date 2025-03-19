@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import { formatDate } from "../../utils/helpers";
+import { departmentColors, statusColors } from "../../utils/constants";
+
 import CommentsIcon from "../../ui/icons/CommentsIcon";
 import PriorityBadge from "../../ui/PriorityBadge";
-import { Link } from "react-router-dom";
-import { departmentColors, statusColors } from "../../utils/constants";
 
 function TaskCard({ task }) {
   return (

@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useStatuses } from "../../../api/useApis";
+import { updateTaskStatus } from "../../../api/fetchers";
+import { useQueryClient } from "@tanstack/react-query";
+import { formatDate } from "../../../utils/helpers";
+
 import PrimaryButton from "../../../ui/buttons/PrimaryButton";
 import CalendarIcon from "../../../ui/icons/CalendarIcon";
 import PieChartIcon from "../../../ui/icons/PieChartIcon";
 import UserIcon from "../../../ui/icons/UserIcon";
 import Dropdown from "../../../ui/inputs/Dropdown";
-import { updateTaskStatus } from "../../../api/fetchers";
-import { formatDate } from "../../../utils/helpers";
-import { useQueryClient } from "@tanstack/react-query";
 
 function TaskPageTaskDetails({
   taskId,

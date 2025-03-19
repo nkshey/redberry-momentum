@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+
+import PlusIcon from "../../ui/icons/PlusIcon";
 import PrimaryButton from "../../ui/buttons/PrimaryButton";
 import SecondaryButton from "../../ui/buttons/SecondaryButton";
-import PlusIcon from "../../ui/icons/PlusIcon";
-import { useState } from "react";
 import AddEmployeeModal from "../AddEmployeeModal";
 
 function CTAButtons() {

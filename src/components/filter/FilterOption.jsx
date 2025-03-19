@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useClickOutside } from "../../hooks/useClickOutside";
+
 import FilterOptionButton from "./FilterOptionButton";
 import FilterPanel from "./FilterPanel";
 

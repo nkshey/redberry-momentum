@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useFilterHandlers } from "../../hooks/useFilterHandlers";
+
 import FilterOption from "../filter/FilterOption";
 import DepartmentFilterBody from "./bodies/DepartmentFilterBody";
 import PriorityFilterBody from "./bodies/PriorityFilterBody";
 import EmployeeFilterBody from "./bodies/EmployeeFilterBody";
-import { useFilterHandlers } from "../../hooks/useFilterHandlers";
 
 function FilterBar() {
   const [openedFilter, setOpenedFilter] = useState(null);

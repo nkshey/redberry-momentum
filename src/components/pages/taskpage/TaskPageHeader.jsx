@@ -1,5 +1,5 @@
-import PriorityBadge from "../../../ui/PriorityBadge";
 import { departmentColors } from "../../../utils/constants";
+import PriorityBadge from "../../../ui/PriorityBadge";
 import PageTitle from "../../PageTitle";
 
 function TaskPageHeader({ priority, name, description, department }) {
