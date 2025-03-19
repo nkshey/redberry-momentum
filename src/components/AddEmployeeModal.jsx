@@ -5,7 +5,7 @@ import { useClickOutside } from "../hooks/useClickOutside";
 import CancelIcon from "../ui/icons/CancelIcon";
 import AddEmployeeForm from "./forms/AddEmployeeForm";
 
-function AddEmployeeModal({ setIsModalOpen, onSuccess }) {
+function AddEmployeeModal({ setIsModalOpen, onSuccess, selectedDepartmentId }) {
   const modalRef = useRef(null);
 
   useClickOutside(modalRef, () => setIsModalOpen(false));
@@ -31,6 +31,7 @@ function AddEmployeeModal({ setIsModalOpen, onSuccess }) {
         <AddEmployeeForm
           setIsModalOpen={setIsModalOpen}
           onSuccess={onSuccess}
+          selectedDepartmentId={selectedDepartmentId}
         />
       </div>
     </div>,

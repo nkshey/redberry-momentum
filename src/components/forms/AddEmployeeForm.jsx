@@ -38,9 +38,12 @@ const initialFormErrors = {
 const MAX_FILE_SIZE = 600 * 1024;
 const nameRegex = /^[a-zA-Zა-ჰ\s]*$/;
 
-function AddEmployeeForm({ setIsModalOpen, onSuccess }) {
+function AddEmployeeForm({ setIsModalOpen, onSuccess, selectedDepartmentId }) {
   const { data: departments } = useDepartments();
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState({
+    ...initialFormData,
+    department_id: selectedDepartmentId,
+  });
   const [errors, setErrors] = useState(initialFormErrors);
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitAttempted, setIsSubmitAttempted] = useState(false);

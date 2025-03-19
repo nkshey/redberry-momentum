@@ -56,7 +56,7 @@ function AddTaskForm() {
   const [errors, setErrors] = useState(() =>
     getFromLocalStorage(STORAGE_KEYS.ERRORS, initialFormErrors),
   );
-  const [selectedDepartment, setSelectedDepartment] = useState(() =>
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState(() =>
     getFromLocalStorage(STORAGE_KEYS.SELECTED_DEPARTMENT, null),
   );
   const [isSubmitAttempted, setIsSubmitAttempted] = useState(false);
@@ -74,7 +74,7 @@ function AddTaskForm() {
   } = useEmployees();
 
   const filteredEmployees = employees?.filter(
-    (employee) => employee.department.id === selectedDepartment,
+    (employee) => employee.department.id === selectedDepartmentId,
   );
 
   // useEffects to save state changes
@@ -87,8 +87,8 @@ function AddTaskForm() {
   }, [errors]);
 
   useEffect(() => {
-    saveToLocalStorage(STORAGE_KEYS.SELECTED_DEPARTMENT, selectedDepartment);
-  }, [selectedDepartment]);
+    saveToLocalStorage(STORAGE_KEYS.SELECTED_DEPARTMENT, selectedDepartmentId);
+  }, [selectedDepartmentId]);
 
   // This code tracks department changes and resets employee selection when department changes
   // Store the previous department to detect changes
@@ -98,14 +98,14 @@ function AddTaskForm() {
     // Only run logic after initial render
     if (
       prevDepartmentRef.current !== null &&
-      prevDepartmentRef.current !== selectedDepartment
+      prevDepartmentRef.current !== selectedDepartmentId
     ) {
       // Reset employee_id when department changes
       setFormData((prevData) => ({ ...prevData, employee_id: null }));
     }
     // Always update reference to current department
-    prevDepartmentRef.current = selectedDepartment;
-  }, [selectedDepartment]);
+    prevDepartmentRef.current = selectedDepartmentId;
+  }, [selectedDepartmentId]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -152,7 +152,7 @@ function AddTaskForm() {
     // Check if required fields are empty
     const isNameEmpty = !formData.name.trim();
     const isEmployeeEmpty = !formData.employee_id;
-    const isDepartmentEmpty = !selectedDepartment;
+    const isDepartmentEmpty = !selectedDepartmentId;
 
     const isDescriptionNotEmpty = formData.description.trim();
 
@@ -274,15 +274,15 @@ function AddTaskForm() {
 
         <Dropdown
           className={
-            !selectedDepartment && isSubmitAttempted
+            !selectedDepartmentId && isSubmitAttempted
               ? "!border-red"
-              : selectedDepartment && "!border-green"
+              : selectedDepartmentId && "!border-green"
           }
           label="დეპარტამენტი*"
           disabled={isSubmitting}
           data={departments}
-          value={selectedDepartment}
-          onChange={(id) => setSelectedDepartment(id)}
+          value={selectedDepartmentId}
+          onChange={(id) => setSelectedDepartmentId(id)}
         />
       </div>
 
@@ -334,7 +334,7 @@ function AddTaskForm() {
           onChange={handleChange}
         />
 
-        {selectedDepartment && (
+        {selectedDepartmentId && (
           <Dropdown
             className={
               !formData.employee_id && isSubmitAttempted
@@ -408,6 +408,7 @@ function AddTaskForm() {
         <AddEmployeeModal
           setIsModalOpen={setIsModalOpen}
           onSuccess={refetchEmployees}
+          selectedDepartmentId={selectedDepartmentId}
         />
       )}
     </form>
