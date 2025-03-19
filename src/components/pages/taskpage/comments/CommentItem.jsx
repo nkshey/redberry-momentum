@@ -1,6 +1,39 @@
-import { useState } from "react";
 import ArrowIcon from "../../../../ui/icons/ArrowIcon";
 import CommentTextArea from "../../../../ui/inputs/CommentTextArea";
+
+function CommentItem({ comment, isReplyOpen, onReplyToggle }) {
+  return (
+    <li className="flex flex-col gap-5">
+      <div className="w-full">
+        <CommentContent
+          author={comment.author_nickname}
+          authorAvatar={comment.author_avatar}
+          text={comment.text}
+        />
+
+        <div className="ml-12.5">
+          <button
+            className="text-purple flex cursor-pointer items-center gap-1.5 text-xs"
+            onClick={() => onReplyToggle(!isReplyOpen)}
+          >
+            <ArrowIcon /> უპასუხე
+          </button>
+
+          {isReplyOpen && (
+            <CommentTextArea
+              className="mt-5"
+              taskId={comment.task_id}
+              parentId={comment.id}
+              onCommentSubmitted={() => onReplyToggle(false)}
+            />
+          )}
+
+          <SubComments comments={comment.sub_comments} />
+        </div>
+      </div>
+    </li>
+  );
+}
 
 function CommentContent({ authorAvatar, author, text }) {
   return (
@@ -36,42 +69,6 @@ function SubComments({ comments }) {
         </li>
       ))}
     </ul>
-  );
-}
-
-function CommentItem({ comment }) {
-  const [isReplyOpen, setIsReplyOpen] = useState(false);
-
-  return (
-    <li className="flex flex-col gap-5">
-      <div className="w-full">
-        <CommentContent
-          author={comment.author_nickname}
-          authorAvatar={comment.author_avatar}
-          text={comment.text}
-        />
-
-        <div className="ml-12.5">
-          <button
-            className="text-purple flex cursor-pointer items-center gap-1.5 text-xs"
-            onClick={() => setIsReplyOpen(true)}
-          >
-            <ArrowIcon /> უპასუხე
-          </button>
-
-          {isReplyOpen && (
-            <CommentTextArea
-              className="mt-5"
-              taskId={comment.task_id}
-              parentId={comment.id}
-              onCommentSubmitted={() => setIsReplyOpen(false)}
-            />
-          )}
-
-          <SubComments comments={comment.sub_comments} />
-        </div>
-      </div>
-    </li>
   );
 }
 

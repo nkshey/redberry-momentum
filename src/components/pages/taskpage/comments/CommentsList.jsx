@@ -1,9 +1,10 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useComments } from "../../../../api/useApis";
 import CommentItem from "./CommentItem";
 
 function CommentsList({ taskId }) {
   const { data: comments, isLoading } = useComments(taskId);
+  const [activeReplyId, setActiveReplyId] = useState(null);
 
   const totalComments = !comments
     ? null
@@ -35,7 +36,14 @@ function CommentsList({ taskId }) {
       {!isLoading && comments.length > 0 && (
         <ul className="flex flex-col gap-9.5">
           {sortedComments.map((comment) => (
-            <CommentItem key={comment.id} comment={comment} />
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              isReplyOpen={activeReplyId === comment.id}
+              onReplyToggle={(isOpen) =>
+                setActiveReplyId(isOpen ? comment.id : null)
+              }
+            />
           ))}
         </ul>
       )}
