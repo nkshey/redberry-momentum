@@ -4,12 +4,17 @@ import { useSpecificTask } from "../api/useApis";
 import TaskPageHeader from "../components/pages/taskpage/TaskPageHeader";
 import TaskPageTaskDetails from "../components/pages/taskpage/TaskPageTaskDetails";
 import CommentsSection from "../components/pages/taskpage/comments/CommentsSection";
+import NotFoundPage from "./NotFoundPage";
 
 function TaskPage() {
   const { id } = useParams();
-  const { data: task, isLoading: taskLoading } = useSpecificTask(id);
+  const { data: task, isLoading: taskLoading, isError } = useSpecificTask(id);
 
   if (taskLoading) return <div>იტვირთება...</div>;
+
+  if (isError || !task) {
+    return <NotFoundPage />;
+  }
 
   return (
     <div className="grid grid-cols-[1fr_1.035fr] gap-56">
