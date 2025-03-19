@@ -20,6 +20,7 @@ import Dropdown from "../../ui/inputs/Dropdown";
 import PrimaryButton from "../../ui/buttons/PrimaryButton";
 import LoadingOverlay from "../../ui/feedback/LoadingOverlay";
 import AddEmployeeModal from "../../components/AddEmployeeModal";
+import DropdownSkeleton from "../../ui/feedback/DropdownSkeleton";
 
 const STORAGE_KEYS = {
   FORM_DATA: "task_form_data",
@@ -204,14 +205,6 @@ function AddTaskForm() {
     }
   }
 
-  if (
-    prioritiesLoading ||
-    statusesLoading ||
-    departmentsLoading ||
-    employeesLoading
-  )
-    return <p>იტვირთება...</p>;
-
   return (
     <form
       className="bg-very-light-purple/65 relative grid place-content-center gap-15.5 rounded-sm border border-[#DDD2FF] px-20 py-36.5"
@@ -272,18 +265,22 @@ function AddTaskForm() {
           />
         </div>
 
-        <Dropdown
-          className={
-            !selectedDepartmentId && isSubmitAttempted
-              ? "!border-red"
-              : selectedDepartmentId && "!border-green"
-          }
-          label="დეპარტამენტი*"
-          disabled={isSubmitting}
-          data={departments}
-          value={selectedDepartmentId}
-          onChange={(id) => setSelectedDepartmentId(id)}
-        />
+        {departmentsLoading ? (
+          <DropdownSkeleton />
+        ) : (
+          <Dropdown
+            className={
+              !selectedDepartmentId && isSubmitAttempted
+                ? "!border-red"
+                : selectedDepartmentId && "!border-green"
+            }
+            label="დეპარტამენტი*"
+            disabled={isSubmitting}
+            data={departments}
+            value={selectedDepartmentId}
+            onChange={(id) => setSelectedDepartmentId(id)}
+          />
+        )}
       </div>
 
       <div className="grid grid-cols-[repeat(2,minmax(auto,34.375rem))] gap-40">
@@ -334,50 +331,61 @@ function AddTaskForm() {
           onChange={handleChange}
         />
 
-        {selectedDepartmentId && (
-          <Dropdown
-            className={
-              !formData.employee_id && isSubmitAttempted
-                ? "!border-red"
-                : formData.employee_id && "!border-green"
-            }
-            label="პასუხისმგებელი თანამშრომელი*"
-            isEmployee={true}
-            data={filteredEmployees}
-            value={formData.employee_id}
-            onChange={(id) => handleDropdown("employee_id", id)}
-            onAddEmployee={() => setIsModalOpen(true)}
-          />
-        )}
+        {selectedDepartmentId &&
+          (employeesLoading ? (
+            <DropdownSkeleton />
+          ) : (
+            <Dropdown
+              className={
+                !formData.employee_id && isSubmitAttempted
+                  ? "!border-red"
+                  : formData.employee_id && "!border-green"
+              }
+              label="პასუხისმგებელი თანამშრომელი*"
+              isEmployee={true}
+              data={filteredEmployees}
+              value={formData.employee_id}
+              onChange={(id) => handleDropdown("employee_id", id)}
+              onAddEmployee={() => setIsModalOpen(true)}
+            />
+          ))}
       </div>
 
       <div className="grid grid-cols-[repeat(2,minmax(auto,34.375rem))] gap-40">
         <div className="grid grid-cols-2 gap-8">
-          <Dropdown
-            className={
-              !formData.priority_id && isSubmitAttempted
-                ? "!border-red"
-                : isSubmitAttempted && "!border-green"
-            }
-            label="პრიორიტეტი*"
-            data={priorities}
-            disabled={isSubmitting}
-            value={formData.priority_id}
-            onChange={(id) => handleDropdown("priority_id", id)}
-          />
+          {prioritiesLoading ? (
+            <DropdownSkeleton />
+          ) : (
+            <Dropdown
+              className={
+                !formData.priority_id && isSubmitAttempted
+                  ? "!border-red"
+                  : isSubmitAttempted && "!border-green"
+              }
+              label="პრიორიტეტი*"
+              data={priorities}
+              disabled={isSubmitting}
+              value={formData.priority_id}
+              onChange={(id) => handleDropdown("priority_id", id)}
+            />
+          )}
 
-          <Dropdown
-            className={
-              !formData.status_id && isSubmitAttempted
-                ? "!border-red"
-                : isSubmitAttempted && "!border-green"
-            }
-            label="სტატუსი*"
-            data={statuses}
-            disabled={isSubmitting}
-            value={formData.status_id}
-            onChange={(id) => handleDropdown("status_id", id)}
-          />
+          {statusesLoading ? (
+            <DropdownSkeleton />
+          ) : (
+            <Dropdown
+              className={
+                !formData.status_id && isSubmitAttempted
+                  ? "!border-red"
+                  : isSubmitAttempted && "!border-green"
+              }
+              label="სტატუსი*"
+              data={statuses}
+              disabled={isSubmitting}
+              value={formData.status_id}
+              onChange={(id) => handleDropdown("status_id", id)}
+            />
+          )}
         </div>
 
         <Input
