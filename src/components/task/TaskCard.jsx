@@ -2,18 +2,7 @@ import { formatDate } from "../../utils/helpers";
 import CommentsIcon from "../../ui/icons/CommentsIcon";
 import PriorityBadge from "../../ui/PriorityBadge";
 import { Link } from "react-router-dom";
-import { statusColors } from "../../utils/constants";
-
-// Department to color mapping
-const departmentColors = {
-  "ადმინისტრაციის დეპარტამენტი": "bg-light-pink",
-  "ადამიანური რესურსების დეპარტამენტი": "bg-light-blue",
-  "ფინანსების დეპარტამენტი": "bg-light-orange",
-  "გაყიდვები და მარკეტინგის დეპარტამენტი": "bg-light-yellow",
-  "ლოჯოსტიკის დეპარტამენტი": "bg-light-pink",
-  "ტექნოლოგიების დეპარტამენტი": "bg-light-blue",
-  "მედიის დეპარტამენტი": "bg-light-orange",
-};
+import { departmentColors, statusColors } from "../../utils/constants";
 
 function TaskCard({ task }) {
   return (
