@@ -37,7 +37,7 @@ function CommentTextArea({
   }
 
   async function handleAddComment() {
-    if (!text.trim() || text.length > 255) {
+    if (!text.trim()) {
       setError(true);
       return;
     }
