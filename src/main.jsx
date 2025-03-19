@@ -8,6 +8,7 @@ import App from "./App.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import TaskPage from "./pages/TaskPage.jsx";
 import AddTaskPage from "./pages/AddTaskPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/task/:id",
         element: <TaskPage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },
