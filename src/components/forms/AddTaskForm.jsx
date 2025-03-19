@@ -389,7 +389,7 @@ function AddTaskForm() {
         </div>
 
         <Input
-          className={`border-very-light-gray w-[58%] ${
+          className={`border-very-light-gray w-[58%] cursor-pointer ${
             !formData.due_date && isSubmitAttempted
               ? "!border-red"
               : isSubmitAttempted && "!border-green"
@@ -401,6 +401,8 @@ function AddTaskForm() {
           disabled={isSubmitting}
           value={formData.due_date}
           onChange={handleChange}
+          onClick={(e) => e.target.showPicker()}
+          onKeyDown={(e) => e.preventDefault()}
         />
       </div>
 
