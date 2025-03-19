@@ -15,6 +15,7 @@ function TaskPage() {
       <section>
         <TaskPageHeader
           priority={task.priority}
+          department={task.department.name}
           name={task.name}
           description={task.description}
         />
