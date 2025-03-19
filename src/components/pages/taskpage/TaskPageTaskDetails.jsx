@@ -7,6 +7,7 @@ import UserIcon from "../../../ui/icons/UserIcon";
 import Dropdown from "../../../ui/inputs/Dropdown";
 import { updateTaskStatus } from "../../../api/fetchers";
 import { formatDate } from "../../../utils/helpers";
+import { useQueryClient } from "@tanstack/react-query";
 
 function TaskPageTaskDetails({
   taskId,
@@ -16,6 +17,7 @@ function TaskPageTaskDetails({
   employeeName,
   dueDate,
 }) {
+  const queryClient = useQueryClient();
   const [currentStatus, setCurrentStatus] = useState(status);
   const [originalStatus, setOriginalStatus] = useState(status);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -24,10 +26,18 @@ function TaskPageTaskDetails({
   async function handleStatusUpdate() {
     setIsUpdating(true);
 
-    await updateTaskStatus(taskId, currentStatus.id);
+    try {
+      await updateTaskStatus(taskId, currentStatus.id);
 
-    setOriginalStatus(currentStatus);
-    setIsUpdating(false);
+      queryClient.invalidateQueries(["task", taskId]);
+      queryClient.invalidateQueries(["tasks"]);
+
+      setOriginalStatus(currentStatus);
+    } catch (error) {
+      console.error("Failed to update task status: ", error);
+    } finally {
+      setIsUpdating(false);
+    }
   }
 
   return (
