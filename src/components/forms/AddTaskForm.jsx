@@ -307,7 +307,7 @@ function AddTaskForm() {
                       : "text-green"
                 }
               >
-                მინიმუმ 4 სიტყვა
+                მინიმუმ 4 სიტყვა ან ცარიელი
               </span>
               <span
                 className={
