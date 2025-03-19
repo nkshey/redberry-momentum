@@ -1,25 +1,57 @@
 import { useState } from "react";
 import ArrowIcon from "../../../../ui/icons/ArrowIcon";
-import TextArea from "../../../../ui/inputs/TextArea";
 import CommentTextArea from "../../../../ui/inputs/CommentTextArea";
+
+function CommentContent({ authorAvatar, author, text }) {
+  return (
+    <div className="flex gap-3">
+      <img
+        className="size-9.5 rounded-full object-cover"
+        src={authorAvatar}
+        alt={author}
+      />
+
+      <div className="w-full">
+        <p className="mb-2 text-lg leading-[1em] font-medium">{author}</p>
+        <p className="text-gray mb-2.5" style={{ overflowWrap: "anywhere" }}>
+          {text}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function SubComments({ comments }) {
+  if (comments.length === 0) return null;
+
+  return (
+    <ul className="mt-5 flex flex-col gap-5">
+      {comments.map((subComment) => (
+        <li key={subComment.id}>
+          <CommentContent
+            author={subComment.author_nickname}
+            authorAvatar={subComment.author_avatar}
+            text={subComment.text}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function CommentItem({ comment }) {
   const [isReplyOpen, setIsReplyOpen] = useState(false);
 
   return (
-    <li className="flex flex-col gap-5" key={comment.id}>
-      <div className="flex gap-3">
-        <img
-          className="size-9.5 rounded-full object-cover"
-          src={comment.author_avatar}
-          alt={comment.author_nickname}
+    <li className="flex flex-col gap-5">
+      <div className="w-full">
+        <CommentContent
+          author={comment.author_nickname}
+          authorAvatar={comment.author_avatar}
+          text={comment.text}
         />
 
-        <div className="w-full">
-          <p className="mb-2 text-lg leading-[1em] font-medium">
-            {comment.author_nickname}
-          </p>
-          <p className="text-gray mb-2.5 break-words">{comment.text}</p>
+        <div className="ml-12.5">
           <button
             className="text-purple flex cursor-pointer items-center gap-1.5 text-xs"
             onClick={() => setIsReplyOpen(true)}
@@ -36,29 +68,7 @@ function CommentItem({ comment }) {
             />
           )}
 
-          {comment.sub_comments.length > 0 && (
-            <ul className="mt-5 flex flex-col gap-5">
-              {comment.sub_comments.map((sub_comment) => (
-                <li key={sub_comment.id}>
-                  <div className="flex gap-3">
-                    <img
-                      className="size-9.5 rounded-full object-cover"
-                      src={sub_comment.author_avatar}
-                      alt={sub_comment.author_nickname}
-                    />
-                    <div className="w-full">
-                      <p className="mb-2 text-lg leading-[1em] font-medium">
-                        {sub_comment.author_nickname}
-                      </p>
-                      <p className="text-gray mb-2.5 break-words">
-                        {sub_comment.text}
-                      </p>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
+          <SubComments comments={comment.sub_comments} />
         </div>
       </div>
     </li>
