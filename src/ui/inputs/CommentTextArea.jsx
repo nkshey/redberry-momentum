@@ -44,16 +44,21 @@ function CommentTextArea({
 
     setIsUpdating(true);
 
-    await addCommentToTask(taskId, text, parentId);
-    setText("");
-    setError(false);
+    try {
+      await addCommentToTask(taskId, text, parentId);
+      setText("");
+      setError(false);
 
-    queryClient.invalidateQueries(["comments", taskId]);
+      queryClient.invalidateQueries(["comments", taskId]);
 
-    setIsUpdating(false);
-
-    if (onCommentSubmitted && parentId) {
-      onCommentSubmitted();
+      if (onCommentSubmitted && parentId) {
+        onCommentSubmitted();
+      }
+    } catch (error) {
+      console.error("Failed to add comment:", error);
+      setError(true);
+    } finally {
+      setIsUpdating(false);
     }
   }
 
