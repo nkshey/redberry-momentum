@@ -1,17 +1,4 @@
-const monthNames = [
-  "იანვ",
-  "თებ",
-  "მარ",
-  "აპრ",
-  "მაი",
-  "ივნ",
-  "ივლ",
-  "აგვ",
-  "სექ",
-  "ოქტ",
-  "ნოემ",
-  "დეკ",
-];
+import { monthNames } from "./constants";
 
 export function formatDate(dateString) {
   const date = new Date(dateString);
