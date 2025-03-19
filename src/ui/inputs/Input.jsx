@@ -9,6 +9,8 @@ function Input({
   disabled,
   value,
   onChange,
+  onClick,
+  onKeyDown,
 }) {
   return (
     <div className={`flex flex-col ${parentClassName}`}>
@@ -26,6 +28,8 @@ function Input({
         id={name}
         value={value}
         onChange={onChange}
+        onClick={onClick}
+        onKeyDown={onKeyDown}
       />
 
       {requirement}
