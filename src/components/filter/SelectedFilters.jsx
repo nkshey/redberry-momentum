@@ -15,7 +15,7 @@ function SelectedFilters() {
 
   return (
     <div className="my-6 flex min-h-7 items-start gap-4.5">
-      <ul className="flex flex-wrap items-center gap-2">
+      <ul className="flex items-center gap-2 overflow-x-auto">
         {filters.departments.map((department) => (
           <FilterTag
             key={department.id}
