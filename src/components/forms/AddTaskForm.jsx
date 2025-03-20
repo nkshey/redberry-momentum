@@ -51,9 +51,29 @@ const initialFormErrors = {
 function AddTaskForm() {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState(() =>
-    getFromLocalStorage(STORAGE_KEYS.FORM_DATA, initialFormData),
-  );
+  const [formData, setFormData] = useState(() => {
+    const storedData = getFromLocalStorage(
+      STORAGE_KEYS.FORM_DATA,
+      initialFormData,
+    );
+
+    // Check if stored due_date is in the past
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const storedDueDate = new Date(storedData.due_date);
+    storedDueDate.setHours(0, 0, 0, 0);
+
+    // If due_date from localStorage is in the past, use tomorrow instead
+    if (storedDueDate < today) {
+      return {
+        ...storedData,
+        due_date: getTomorrowDate(),
+      };
+    }
+
+    return storedData;
+  });
   const [errors, setErrors] = useState(() =>
     getFromLocalStorage(STORAGE_KEYS.ERRORS, initialFormErrors),
   );
