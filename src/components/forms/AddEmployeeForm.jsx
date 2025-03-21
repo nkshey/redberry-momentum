@@ -39,7 +39,7 @@ const initialFormErrors = {
 const MAX_FILE_SIZE = 600 * 1024;
 const nameRegex = /^[a-zA-Zა-ჰ\s]*$/;
 
-function AddEmployeeForm({ setIsModalOpen, onSuccess, selectedDepartmentId }) {
+function AddEmployeeForm({ setIsModalOpen, selectedDepartmentId }) {
   const queryClient = useQueryClient();
   const { data: departments } = useDepartments();
   const [formData, setFormData] = useState({
@@ -187,10 +187,6 @@ function AddEmployeeForm({ setIsModalOpen, onSuccess, selectedDepartmentId }) {
         await addEmployee(formData);
         queryClient.invalidateQueries("employees");
         setIsModalOpen(false);
-
-        if (onSuccess) {
-          onSuccess();
-        }
       } catch (error) {
         console.error("Failed to add employee: ", error);
       } finally {

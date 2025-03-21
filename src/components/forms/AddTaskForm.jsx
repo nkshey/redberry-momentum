@@ -88,11 +88,7 @@ function AddTaskForm() {
   const { data: priorities, isLoading: prioritiesLoading } = usePriorities();
   const { data: statuses, isLoading: statusesLoading } = useStatuses();
   const { data: departments, isLoading: departmentsLoading } = useDepartments();
-  const {
-    data: employees,
-    isLoading: employeesLoading,
-    refetch: refetchEmployees,
-  } = useEmployees();
+  const { data: employees, isLoading: employeesLoading } = useEmployees();
 
   const filteredEmployees = employees?.filter(
     (employee) => employee.department.id === selectedDepartmentId,
@@ -437,7 +433,6 @@ function AddTaskForm() {
       {isModalOpen && (
         <AddEmployeeModal
           setIsModalOpen={setIsModalOpen}
-          onSuccess={refetchEmployees}
           selectedDepartmentId={selectedDepartmentId}
         />
       )}
