@@ -4,7 +4,6 @@ import { updateTaskStatus } from "../../../api/fetchers";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatDate } from "../../../utils/helpers";
 
-import PrimaryButton from "../../../ui/buttons/PrimaryButton";
 import CalendarIcon from "../../../ui/icons/CalendarIcon";
 import PieChartIcon from "../../../ui/icons/PieChartIcon";
 import UserIcon from "../../../ui/icons/UserIcon";
@@ -20,20 +19,18 @@ function TaskPageTaskDetails({
 }) {
   const queryClient = useQueryClient();
   const [currentStatus, setCurrentStatus] = useState(status);
-  const [originalStatus, setOriginalStatus] = useState(status);
   const [isUpdating, setIsUpdating] = useState(false);
-  const hasStatusChanged = currentStatus.id !== originalStatus.id;
 
-  async function handleStatusUpdate() {
+  async function handleStatusChange(newStatus) {
+    if (newStatus.id === currentStatus.id) return;
+
     setIsUpdating(true);
 
     try {
-      await updateTaskStatus(taskId, currentStatus.id);
-
+      await updateTaskStatus(taskId, newStatus.id);
       queryClient.invalidateQueries(["task", taskId]);
       queryClient.invalidateQueries(["tasks"]);
-
-      setOriginalStatus(currentStatus);
+      setCurrentStatus(newStatus);
     } catch (error) {
       console.error("Failed to update task status: ", error);
     } finally {
@@ -48,7 +45,8 @@ function TaskPageTaskDetails({
       <div className="flex max-w-fit flex-col gap-10">
         <Status
           currentStatus={currentStatus}
-          onStatusChange={setCurrentStatus}
+          onStatusChange={handleStatusChange}
+          isUpdating={isUpdating}
         />
 
         <Employee
@@ -58,22 +56,12 @@ function TaskPageTaskDetails({
         />
 
         <DueDate dueDate={dueDate} />
-
-        {hasStatusChanged && (
-          <PrimaryButton
-            className="-mt-4 h-9 place-self-end"
-            disabled={isUpdating}
-            onClick={handleStatusUpdate}
-          >
-            {isUpdating ? "ინახება..." : "შენახვა"}
-          </PrimaryButton>
-        )}
       </div>
     </div>
   );
 }
 
-function Status({ currentStatus, onStatusChange }) {
+function Status({ currentStatus, onStatusChange, isUpdating }) {
   const { data } = useStatuses();
 
   function handleStatusChange(statusId) {
@@ -95,6 +83,7 @@ function Status({ currentStatus, onStatusChange }) {
         data={data}
         value={currentStatus.id}
         onChange={handleStatusChange}
+        disabled={isUpdating}
       />
     </div>
   );
