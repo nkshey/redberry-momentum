@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDepartments } from "../../api/useApis";
 import { addEmployee } from "../../api/fetchers";
 
@@ -39,6 +40,7 @@ const MAX_FILE_SIZE = 600 * 1024;
 const nameRegex = /^[a-zA-Zა-ჰ\s]*$/;
 
 function AddEmployeeForm({ setIsModalOpen, onSuccess, selectedDepartmentId }) {
+  const queryClient = useQueryClient();
   const { data: departments } = useDepartments();
   const [formData, setFormData] = useState({
     ...initialFormData,
@@ -183,6 +185,7 @@ function AddEmployeeForm({ setIsModalOpen, onSuccess, selectedDepartmentId }) {
       try {
         setIsSubmitting(true);
         await addEmployee(formData);
+        queryClient.invalidateQueries("employees");
         setIsModalOpen(false);
 
         if (onSuccess) {
