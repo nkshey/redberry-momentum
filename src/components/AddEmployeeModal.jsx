@@ -11,9 +11,9 @@ function AddEmployeeModal({ setIsModalOpen, onSuccess, selectedDepartmentId }) {
   useClickOutside(modalRef, () => setIsModalOpen(false));
 
   return createPortal(
-    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-[#0d0f10]/15 backdrop-blur-[0.3125rem]">
+    <div className="fixed inset-0 z-9999 flex items-start justify-center bg-[#0d0f10]/15 backdrop-blur-[0.3125rem]">
       <div
-        className="relative w-full max-w-228 rounded-[0.625rem] bg-white px-12.5 pt-10 pb-15"
+        className="relative top-29.5 w-full max-w-228 rounded-[0.625rem] bg-white px-12.5 pt-10 pb-15"
         ref={modalRef}
       >
         <button
